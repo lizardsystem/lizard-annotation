@@ -1,0 +1,2 @@
+include *.rst
+recursive-include lizard_annotation *.rst *.py *.html *.css *.js *.jpg *.png *.gif *.pdf
