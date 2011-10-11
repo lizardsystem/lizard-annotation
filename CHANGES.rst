@@ -8,3 +8,5 @@ Changelog of lizard-annotation
 - Initial library skeleton created by nensskel.  [Alexandr Seleznev]
 
 - Added routers.py
+
+- Added models.py
