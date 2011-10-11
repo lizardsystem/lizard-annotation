@@ -22,7 +22,7 @@ tests_require = [
 
 setup(name='lizard-annotation',
       version=version,
-      description="TODO",
+      description="Manages annotations of various objects.",
       long_description=long_description,
       # Get strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=['Programming Language :: Python',
