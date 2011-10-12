@@ -16,8 +16,7 @@ install_requires = [
     'lizard-ui >= 3.0',
     'pkginfo',
     'pymongo',
-    'mongokit',
-    'django-mongokit',
+    'mongoengine',
     ],
 
 tests_require = [
