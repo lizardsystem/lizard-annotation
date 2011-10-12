@@ -1,7 +1,9 @@
 
+from django import forms
 from models import Annotation
 
-class AnnotationForm():
+class AnnotationDetailForm(forms.Form):
+    pass
 
-    class Meta:
-            document = Annotation
+    
+
