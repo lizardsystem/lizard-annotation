@@ -1,7 +1,7 @@
-from django_mongokit.forms import DocumentForm
+
 from models import Annotation
 
-class AnnotationForm(DocumentForm):
+class AnnotationForm():
 
     class Meta:
             document = Annotation
