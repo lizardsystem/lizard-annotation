@@ -26,15 +26,24 @@ class AnnotationStatus(Document):
 
     status = StringField()
 
+    def __unicode__(self):
+        return self.status
+
 
 class AnnotationCategory(Document):
 
     category = StringField()
 
+    def __unicode__(self):
+        return self.category
+
 
 class AnnotationType(Document):
 
     annotation_type = StringField()
+
+    def __unicode__(self):
+        return self.annotation_type
 
 
 class Annotation(Document):
@@ -49,3 +58,5 @@ class Annotation(Document):
     dt_modification = DateTimeField()
     reference_objects = ListField(ReferenceObject)
 
+    def __unicode__(self):
+        return self.title

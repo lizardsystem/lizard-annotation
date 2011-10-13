@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from django.views.generic import FormView
 from lizard_annotation.forms import AnnotationForm
 from lizard_annotation.models import Annotation
+from lizard_annotation.models import AnnotationStatus
 
 
 class AnnotationEditView(FormView):
@@ -16,9 +17,7 @@ class AnnotationEditView(FormView):
     success_url = '.'
 
     def form_valid(self, form):
-        annotation = Annotation()
-        annotation.title = form.cleaned_data['title']
-        annotation.save()
+        Annotation(**form.cleaned_data).save()
         return super(FormView, self).form_valid(form)
 
     
