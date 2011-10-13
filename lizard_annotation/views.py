@@ -17,8 +17,7 @@ class AnnotationEditView(FormView):
     success_url = '.'
 
     def form_valid(self, form):
-        annotation = Annotation(**form.cleaned_data)
-        annotation.save()
+        Annotation(**form.cleaned_data).save()
         return super(FormView, self).form_valid(form)
 
     

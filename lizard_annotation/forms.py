@@ -18,8 +18,8 @@ class AnnotationForm(forms.Form):
 
     def clean_status(self):
         """Return the status object."""
-        data = self.cleaned_data['status']
-        data = AnnotationStatus.objects.get(status=data)
-        return data
+        status = self.cleaned_data['status']
+        obj = AnnotationStatus.objects.get(status=status)
+        return obj
         
 
