@@ -17,8 +17,8 @@ from mongoengine import Document
 
 class ReferenceObject(EmbeddedDocument):
 
-    reference_key = IntField()
-    name = StringField()
+    reference_id = IntField()
+    reference_model = StringField()
     reference_filter = StringField()
 
 
