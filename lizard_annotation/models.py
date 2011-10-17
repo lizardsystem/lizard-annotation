@@ -63,7 +63,7 @@ class Annotation(Document):
     user_modifier = StringField()
     dt_creation = DateTimeField()
     dt_modification = DateTimeField()
-    reference_objects = ListField(ReferenceObject)
+    reference_objects = ListField(EmbeddedDocumentField(ReferenceObject))
 
     def __unicode__(self):
         return self.title

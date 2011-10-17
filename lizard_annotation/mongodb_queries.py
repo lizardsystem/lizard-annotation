@@ -9,6 +9,13 @@ from lizard_annotation.models import ReferenceObject
 from datetime import datetime
 
 
+def remove_all_data():
+    Annotation.objects.delete()
+    AnnotationCategory.objects.delete()
+    AnnotationStatus.objects.delete()
+    AnnotationType.objects.delete()
+
+
 def insert_dummy_data():
     insert_dummy_annotationtypes()
     insert_dummy_annotationstatuses()
