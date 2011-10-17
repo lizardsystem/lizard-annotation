@@ -101,11 +101,13 @@ def insert_dummy_annotations():
 
     gebied_a = ReferenceObject()
     gebied_a.reference_id = 100
-    gebied_a.reference_model = "AanAfvoerGebied"
+    gebied_a.reference_model = "Gebied"
+    gebied_a.filter = "%s%d" % (gebied_a.reference_model, gebied_a.reference_id)
 
     gebied_b = ReferenceObject()
     gebied_b.reference_id = 200
-    gebied_b.reference_model = "AanAfvoerGebied"
+    gebied_b.reference_model = "Gebied"
+    gebied_b.filter = "%s%d" % (gebied_b.reference_model, gebied_b.reference_id)
 
     annotations = [
         {
@@ -118,7 +120,8 @@ def insert_dummy_annotations():
                 "category": "Ecologie"} )[0],
         "user_creator": "Alexandr",
         "dt_creation": datetime.today(),
-        "reference_objects": [gebied_a, gebied_b]
+        "reference_objects": { gebied_a.filter: gebied_a,
+                               gebied_b.filter: gebied_b }
         },
         {
         "title": "Kroos",
@@ -130,7 +133,7 @@ def insert_dummy_annotations():
                 "category": "onderzoek Kwantiteit"} )[0],
         "user_creator": "Alexandr",
         "dt_creation": datetime.today(),
-        "reference_objects": [gebied_a]
+        "reference_objects": { gebied_a.filter: gebied_a }
         }
     ]
 
@@ -138,7 +141,9 @@ def insert_dummy_annotations():
         annotation = Annotation(**item)
         annotation.save()
 
-def annotations_dict(gebied_id=0):
-    f = { "reference_objects.reference_id": gebied_id }
-    annotations = Annotation.objects.filter(f)
+def annotations_list(reference_filter):
+    key = "reference_objects__%s" % reference_filter
+
+    f = { key: { "$exists": True } }
+    return Annotation.objects(**f)
 
