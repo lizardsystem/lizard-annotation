@@ -14,28 +14,17 @@ from mongoengine import EmbeddedDocument
 from mongoengine import EmbeddedDocumentField
 from mongoengine import Document
 
+AanAfvoerGebied = (
+    u'GebiedA',
+    u'GebiedB'
+)
+
 
 class ReferenceObject(EmbeddedDocument):
 
     reference_id = IntField()
     reference_model = StringField()
     reference_filter = StringField()
-
-
-class AnnotationStatus(Document):
-
-    status = StringField()
-
-    def __unicode__(self):
-        return self.status
-
-
-class AnnotationCategory(Document):
-
-    category = StringField()
-
-    def __unicode__(self):
-        return self.category
 
 
 class AnnotationType(Document):
@@ -46,14 +35,32 @@ class AnnotationType(Document):
         return self.annotation_type
 
 
+class AnnotationCategory(Document):
+
+    category = StringField()
+    annotation_type =  ReferenceField(AnnotationType)
+
+    def __unicode__(self):
+        return self.category
+
+
+class AnnotationStatus(Document):
+
+    status = StringField()
+    annotaition_type = ReferenceField(AnnotationType)
+
+    def __unicode__(self):
+        return self.status
+
+
 class Annotation(Document):
 
     title = StringField()
     status =  ReferenceField(AnnotationStatus)
     annotation_type =  ReferenceField(AnnotationType)
     category = ReferenceField(AnnotationCategory)
-    user_creator = EmbeddedDocumentField(ReferenceObject)
-    user_modifier = EmbeddedDocumentField(ReferenceObject)
+    user_creator = StringField()
+    user_modifier = StringField()
     dt_creation = DateTimeField()
     dt_modification = DateTimeField()
     reference_objects = ListField(ReferenceObject)
