@@ -27,27 +27,27 @@ def insert_dummy_categories():
     categories =[
         {
             "category": "Ecologie",
-            "type": AnnotationType.objects.filter( **{
+            "annotation_type": AnnotationType.objects.filter( **{
                     "annotation_type": "interpretatie"} )[0]
         },
         {
             "category": "onderzoek Kwantiteit",
-            "type": AnnotationType.objects.filter( **{
+            "annotation_type": AnnotationType.objects.filter( **{
                     "annotation_type": "interpretatie"} )[0]
         },
         {
             "category": "In",
-            "type": AnnotationType.objects.filter( **{
+            "annotation_type": AnnotationType.objects.filter( **{
                     "annotation_type": "interpretatie"} )[0]
         },
         {
             "category": "Algemeen",
-            "type": AnnotationType.objects.filter( **{
+            "annotation_type": AnnotationType.objects.filter( **{
                     "annotation_type": "interpretatie"} )[0]
         },
         {
             "category": "Waterkwaliteit",
-            "type": AnnotationType.objects.filter( **{
+            "annotation_type": AnnotationType.objects.filter( **{
                     "annotation_type": "interpretatie"} )[0]
         }]
 
@@ -69,27 +69,27 @@ def insert_dummy_annotationstatuses():
     statuses = [
         {
             "status": "In bewerking",
-            "type": AnnotationType.objects.get(
+            "annotation_type": AnnotationType.objects.get(
                 annotation_type='interpretatie')
         },
         {
             "status": "Concept",
-            "type": AnnotationType.objects.get(
+            "annotation_type": AnnotationType.objects.get(
                 annotation_type='interpretatie')
         },
         {
             "status": "Bewerking",
-            "type": AnnotationType.objects.get(
+            "annotation_type": AnnotationType.objects.get(
                 annotation_type='interpretatie')
         },
         {
             "status": "Definitief",
-            "type": AnnotationType.objects.get(
+            "annotation_type": AnnotationType.objects.get(
                 annotation_type='interpretatie')
         },
         {
             "status": "Afgehandeld",
-            "type": AnnotationType.objects.get(
+            "annotation_type": AnnotationType.objects.get(
                 annotation_type='actie')
         }]
 
