@@ -66,31 +66,31 @@ def insert_dummy_annotationtypes(annotation_types=None):
         obj.save()
 
 def insert_dummy_annotationstatuses():
-    statuses =[
+    statuses = [
         {
             "status": "In bewerking",
-            "type": AnnotationType.objects.filter( **{
-                    "annotation_type": "interpretatie"} )[0]
+            "type": AnnotationType.objects.get(
+                annotation_type='interpretatie')
         },
         {
             "status": "Concept",
-            "type": AnnotationType.objects.filter( **{
-                    "annotation_type": "interpretatie"} )[0]
+            "type": AnnotationType.objects.get(
+                annotation_type='interpretatie')
         },
         {
             "status": "Bewerking",
-            "type": AnnotationType.objects.filter( **{
-                    "annotation_type": "interpretatie"} )[0]
+            "type": AnnotationType.objects.get(
+                annotation_type='interpretatie')
         },
         {
             "status": "Definitief",
-            "type": AnnotationType.objects.filter( **{
-                    "annotation_type": "interpretatie"} )[0]
+            "type": AnnotationType.objects.get(
+                annotation_type='interpretatie')
         },
         {
             "status": "Afgehandeld",
-            "type": AnnotationType.objects.filter( **{
-                    "annotation_type": "actie"} )[0]
+            "type": AnnotationType.objects.get(
+                annotation_type='actie')
         }]
 
     for item in statuses:

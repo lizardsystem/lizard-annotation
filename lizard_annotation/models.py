@@ -47,7 +47,7 @@ class AnnotationCategory(Document):
 class AnnotationStatus(Document):
 
     status = StringField()
-    annotaition_type = ReferenceField(AnnotationType)
+    annotation_type = ReferenceField(AnnotationType)
 
     def __unicode__(self):
         return self.status
