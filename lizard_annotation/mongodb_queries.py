@@ -143,7 +143,6 @@ def insert_dummy_annotations():
 
 def annotations_list(reference_filter):
     key = "reference_objects__%s" % reference_filter
-
     f = { key: { "$exists": True } }
     return Annotation.objects(**f)
 

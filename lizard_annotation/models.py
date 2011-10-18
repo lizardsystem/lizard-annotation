@@ -49,6 +49,10 @@ class AnnotationStatus(Document):
 
 
 class Annotation(Document):
+    """
+    reference_object field expects a dict. object
+    like {"Gebied100": ReletionObject,}.
+    """
 
     title = StringField()
     status =  ReferenceField(AnnotationStatus)

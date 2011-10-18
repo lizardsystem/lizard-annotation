@@ -28,12 +28,10 @@ class AnnotationView(AppView):
 
     template_name = 'lizard_annotation/annotation_view.html'
 
-    def get_context_data(self, **kwargs):
-        aanafvoergebiedden = [{ "name": "GebiedA", "id": 100 },
-                             { "name": "GebiedB", "id": 200 }]
-        annotations = annotations_list("GebiedA100")
+    def annotations(self):
+        return annotations_list("Gebied100")
 
-        context = super(AnnotationView, self).get_context_data(**kwargs)
-        context['aanafvoergebiedden'] = aanafvoergebiedden
-        context['annotations'] = annotations
-        return context
+    def aanafvoergebiedden(self):
+        aanafvoergebiedden = [{ "name": "Gebied", "id": 100 },
+                             { "name": "Gebied", "id": 200 }]
+        return aanafvoergebiedden

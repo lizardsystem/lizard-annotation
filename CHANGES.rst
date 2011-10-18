@@ -10,3 +10,6 @@ Changelog of lizard-annotation
 - Added routers.py
 
 - Added models.py
+
+- Changed annotation model, reference_objects expects a dict. object
+  where key is a string of [model_name + record_id] and value is ReferenceObject().

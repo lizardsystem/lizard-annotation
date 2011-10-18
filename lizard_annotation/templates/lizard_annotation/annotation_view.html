@@ -1,27 +1,53 @@
-<div style="overflow:auto">
-<div align="">
-  <select name="AanAfvoerGebied:">
-    {% for gebied in aanafvoergebiedden %}
-    <option value="{{ gebied.name }}">
-    {{ gebied.name }}
+{% extends "lizard_ui/lizardbase.html" %}{% load compress i18n %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript"
+        src="{{ STATIC_URL }}lizard_annotation/lizard_annotation.js"></script>
+{% endblock %}
+{% block content %}
+{{ block.super }}
+
+<div>
+  <select id="reference_objects">
+    {% for gebied in view.aanafvoergebiedden %}
+    <option value="{{ gebied.name }}{{ gebied.id }}">
+    {{ gebied.name }}{{ gebied.id }}
     </option>
     {% endfor %}
   </select>
 </div>
-<table class="">
+
+<div>
+
+<table>
   <th>Titel</th>
   <th>Categorie</th>
   <th>Status</th>
   <th>Datum</th>
   <th>Door</th>
-{% for annotation in annotations %}
+{% for annotation in view.annotations %}
     <tr>
-      <td>{{ annotation.title }}</td>
+      <td><a href="">{{ annotation.title }}</a></td>
       <td>{{ annotation.category }}</td>
       <td>{{ annotation.status }}</td>
       <td>{{ annotation.dt_creation }}</td>
       <td>{{ annotation.user_creator }}</td>
     </tr>
 {% endfor %}
+  <tr>
+    <td>
+      <button type="button" OnClick="">Annuleer</button>
+      <button type="button" OnClick=">Nieuw</button>
+    </td>
+  </tr>
 </tabel>
+
+
+</div>
+
+{% endblock content %}
+
+<div>
+
 </div>
