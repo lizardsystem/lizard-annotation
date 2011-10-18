@@ -17,38 +17,30 @@
     {% endfor %}
   </select>
 </div>
-
 <div>
-
-<table class="sortable-table">
-  <thead>
-    <tr>
-      <th>Titel</th>
-      <th>Categorie</th>
-      <th>Status</th>
-      <th>Datum</th>
-      <th>Door</th>
-    </tr>
-  </thead>
-  <tbody>
-{% for annotation in view.annotations %}
-    <tr>
-      <td><a href="">{{ annotation.title }}</a></td>
-      <td>{{ annotation.category }}</td>
-      <td>{{ annotation.status }}</td>
-      <td>{{ annotation.dt_creation }}</td>
-      <td>{{ annotation.user_creator }}</td>
-    </tr>
-{% endfor %}
-  </tbody>
-</table>
-<button type="button" OnClick=".">Annuleer</button>
-<button type="button" OnClick=".">Nieuw</button>
-
+  <table class="sortable-table">
+    <thead>
+      <tr>
+        <th>Titel</th>
+        <th>Categorie</th>
+        <th>Status</th>
+        <th>Datum</th>
+        <th>Door</th>
+      </tr>
+    </thead>
+    <tbody>
+  {% for annotation in view.annotations %}
+      <tr>
+        <td><a href="">{{ annotation.title }}</a></td>
+        <td>{{ annotation.category }}</td>
+        <td>{{ annotation.status }}</td>
+        <td>{{ annotation.dt_creation }}</td>
+        <td>{{ annotation.user_creator }}</td>
+      </tr>
+  {% endfor %}
+    </tbody>
+  </table>
+  <button type="button" OnClick=".">Annuleer</button>
+  <button type="button" OnClick=".">Nieuw</button>
 </div>
-
 {% endblock content %}
-
-<div>
-
-</div>
