@@ -14,11 +14,6 @@ from mongoengine import EmbeddedDocument
 from mongoengine import EmbeddedDocumentField
 from mongoengine import Document
 
-AanAfvoerGebied = (
-    u'GebiedA',
-    u'GebiedB'
-)
-
 
 class ReferenceObject(EmbeddedDocument):
 
@@ -63,7 +58,7 @@ class Annotation(Document):
     user_modifier = StringField()
     dt_creation = DateTimeField()
     dt_modification = DateTimeField()
-    reference_objects = ListField(EmbeddedDocumentField(ReferenceObject))
+    reference_objects = DictField()
 
     def __unicode__(self):
         return self.title

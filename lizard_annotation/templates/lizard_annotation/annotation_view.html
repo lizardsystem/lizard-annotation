@@ -1,0 +1,27 @@
+<div style="overflow:auto">
+<div align="">
+  <select name="AanAfvoerGebied:">
+    {% for gebied in aanafvoergebiedden %}
+    <option value="{{ gebied.name }}">
+    {{ gebied.name }}
+    </option>
+    {% endfor %}
+  </select>
+</div>
+<table class="">
+  <th>Titel</th>
+  <th>Categorie</th>
+  <th>Status</th>
+  <th>Datum</th>
+  <th>Door</th>
+{% for annotation in annotations %}
+    <tr>
+      <td>{{ annotation.title }}</td>
+      <td>{{ annotation.category }}</td>
+      <td>{{ annotation.status }}</td>
+      <td>{{ annotation.dt_creation }}</td>
+      <td>{{ annotation.user_creator }}</td>
+    </tr>
+{% endfor %}
+</tabel>
+</div>
