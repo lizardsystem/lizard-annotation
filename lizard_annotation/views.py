@@ -46,7 +46,9 @@ class AnnotationView(AppView):
     def annotations(self):
         return annotations_list("Gebied100")
 
-    def aanafvoergebiedden(self):
-        aanafvoergebiedden = [{ "name": "Gebied", "id": 100 },
-                             { "name": "Gebied", "id": 200 }]
-        return aanafvoergebiedden
+    def reference_objects(self):
+        """Return a list of dicts with reference_id and reference_model."""
+        objs = {}
+        for an in Annotation.objects.all():
+            objs.update(an.reference_objects)
+        return objs.values()

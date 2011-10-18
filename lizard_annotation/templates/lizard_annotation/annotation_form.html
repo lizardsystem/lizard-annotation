@@ -3,5 +3,6 @@
     <table>
         {{ form.as_table }}
     </table>
-    <input type="submit" value="Submit" />
+    {{ label.load }}
+    <input type="submit" value="{{ label.save }}" />
 </form>

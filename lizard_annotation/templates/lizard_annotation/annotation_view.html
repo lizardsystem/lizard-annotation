@@ -10,9 +10,9 @@
 
 <div>
   <select id="reference_objects">
-    {% for gebied in view.aanafvoergebiedden %}
-    <option value="{{ gebied.name }}{{ gebied.id }}">
-    {{ gebied.name }}{{ gebied.id }}
+    {% for obj in view.reference_objects %}
+    <option value="{{ obj.reference_model }}{{ obj.reference_id }}">
+    {{ obj.reference_name }}
     </option>
     {% endfor %}
   </select>

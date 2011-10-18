@@ -99,15 +99,17 @@ def insert_dummy_annotationstatuses():
 
 def insert_dummy_annotations():
 
-    gebied_a = ReferenceObject()
-    gebied_a.reference_id = 100
-    gebied_a.reference_model = "Gebied"
-    gebied_a.filter = "%s%d" % (gebied_a.reference_model, gebied_a.reference_id)
+    obj_a = ReferenceObject()
+    obj_a.reference_id = 100
+    obj_a.reference_model = "Gebied"
+    obj_a.reference_name = "Aan-afvoergebied A"
+    obj_a.reference_filter = "%s%d" % (obj_a.reference_model, obj_a.reference_id)
 
-    gebied_b = ReferenceObject()
-    gebied_b.reference_id = 200
-    gebied_b.reference_model = "Gebied"
-    gebied_b.filter = "%s%d" % (gebied_b.reference_model, gebied_b.reference_id)
+    obj_b = ReferenceObject()
+    obj_b.reference_id = 200
+    obj_b.reference_model = "Gebied"
+    obj_b.reference_name = "Aan-afvoergebied B"
+    obj_b.reference_filter = "%s%d" % (obj_b.reference_model, obj_b.reference_id)
 
     annotations = [
         {
@@ -120,8 +122,8 @@ def insert_dummy_annotations():
                 "category": "Ecologie"} )[0],
         "user_creator": "Alexandr",
         "dt_creation": datetime.today(),
-        "reference_objects": { gebied_a.filter: gebied_a,
-                               gebied_b.filter: gebied_b }
+        "reference_objects": { obj_a.reference_filter: obj_a,
+                               obj_b.reference_filter: obj_b }
         },
         {
         "title": "Kroos",
@@ -133,7 +135,7 @@ def insert_dummy_annotations():
                 "category": "onderzoek Kwantiteit"} )[0],
         "user_creator": "Alexandr",
         "dt_creation": datetime.today(),
-        "reference_objects": { gebied_a.filter: gebied_a }
+        "reference_objects": { obj_a.reference_filter: obj_a }
         }
     ]
 

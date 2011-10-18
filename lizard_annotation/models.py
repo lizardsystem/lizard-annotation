@@ -19,6 +19,7 @@ class ReferenceObject(EmbeddedDocument):
 
     reference_id = IntField()
     reference_model = StringField()
+    reference_name = StringField()
     reference_filter = StringField()
 
 
