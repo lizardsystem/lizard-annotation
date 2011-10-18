@@ -1,8 +1,17 @@
+{% extends "lizard_ui/lizardbase.html" %}{% load compress i18n %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript"
+        src="{{ STATIC_URL }}lizard_annotation/lizard_annotation.js"></script>
+{% endblock %}
+{% block content %}
+{{ block.super }}
 <form action="." method="post">
     {% csrf_token %}
     <table>
         {{ form.as_table }}
     </table>
-    {{ label.load }}
-    <input type="submit" value="{{ label.save }}" />
+    <input type="submit" value="{{ view.labels.save }}" />
 </form>
+{% endblock content %}
