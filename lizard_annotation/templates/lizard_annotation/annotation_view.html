@@ -20,12 +20,17 @@
 
 <div>
 
-<table>
-  <th>Titel</th>
-  <th>Categorie</th>
-  <th>Status</th>
-  <th>Datum</th>
-  <th>Door</th>
+<table class="sortable-table">
+  <thead>
+    <tr>
+      <th>Titel</th>
+      <th>Categorie</th>
+      <th>Status</th>
+      <th>Datum</th>
+      <th>Door</th>
+    </tr>
+  </thead>
+  <tbody>
 {% for annotation in view.annotations %}
     <tr>
       <td><a href="">{{ annotation.title }}</a></td>
@@ -35,14 +40,10 @@
       <td>{{ annotation.user_creator }}</td>
     </tr>
 {% endfor %}
-  <tr>
-    <td>
-      <button type="button" OnClick="">Annuleer</button>
-      <button type="button" OnClick=">Nieuw</button>
-    </td>
-  </tr>
-</tabel>
-
+  </tbody>
+</table>
+<button type="button" OnClick=".">Annuleer</button>
+<button type="button" OnClick=".">Nieuw</button>
 
 </div>
 
