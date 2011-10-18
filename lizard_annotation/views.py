@@ -6,6 +6,7 @@ from django.views.generic import FormView
 from django.utils.translation import pgettext 
 from django.utils.translation import ugettext
 from django.views.generic import TemplateView
+from django.views.generic import DetailView
 
 from lizard_annotation.forms import AnnotationForm
 from lizard_annotation.models import Annotation
@@ -14,6 +15,11 @@ from lizard_ui.views import ViewContextMixin
 from lizard_map.views import AppView
 
 from lizard_annotation.mongodb_queries import annotations_list
+
+class AnnotationDetailView(ViewContextMixin, DetailView):
+
+    template_name = 'lizard_annotation/annotation_form.html'
+
 
 class AnnotationEditView(ViewContextMixin, FormView):
 

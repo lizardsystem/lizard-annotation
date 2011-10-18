@@ -6,6 +6,7 @@ from django.contrib import admin
 
 from lizard_ui.urls import debugmode_urlpatterns
 from lizard_annotation.views import AnnotationEditView
+from lizard_annotation.views import AnnotationDetailView
 from lizard_annotation.views import AnnotationView
 from django.views.generic import ListView
 
