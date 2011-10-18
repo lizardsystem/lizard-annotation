@@ -3,7 +3,7 @@
 # Create your views here.
 
 from django.views.generic import FormView
-from django.utils.translation import pgettext
+from django.utils.translation import pgettext 
 from django.utils.translation import ugettext
 from django.views.generic import TemplateView
 
@@ -31,8 +31,7 @@ class AnnotationEditView(FormView):
 
         kwargs.update({
             'label': {
-                'save': pgettext(__name__, u'Save'),
-                'load': ugettext(u'Load'),
+                'save': pgettext(u'Save the contents of a form', 'Save'),
             },
         })
 
