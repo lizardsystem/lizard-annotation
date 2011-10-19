@@ -39,12 +39,15 @@ class AnnotationEditView(FormView):
         return kwargs
 
 
-class AnnotationView(AppView):
+class AnnotationView(TemplateView):
 
     template_name = 'lizard_annotation/annotation_view.html'
 
-    def annotations(self):
-        return annotations_list("Gebied100")
+    def annotations(self, reference_filter=""):
+        if reference_filter=="":
+            return []
+        else:
+            return annotations_list(reference_filter)
 
     def reference_objects(self):
         """Return a list of dicts with reference_id and reference_model."""
@@ -52,3 +55,15 @@ class AnnotationView(AppView):
         for an in Annotation.objects.all():
             objs.update(an.reference_objects)
         return objs.values()
+
+    def post(self, request, *args, **kwargs):
+        reference_filter = request.POST.get('reference_filter')
+        context = super(AnnotationView, self).get_context_data(**kwargs)
+        #options = {"annotations": self.annotations(reference_filter)}
+        return context
+
+    def get_context_data(self, **kwargs):
+        context = super(AnnotationView, self).get_context_data(**kwargs)
+        return {'annotations': self.annotations(),
+                'reference_objects': self.reference_objects()}
+

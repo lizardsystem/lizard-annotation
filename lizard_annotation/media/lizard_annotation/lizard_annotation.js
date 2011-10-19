@@ -1,14 +1,20 @@
 
 function setAnnotations() {
     $("#reference_objects").live('change', function () {
-        alert($("select option:selected").val());
-        // $.post(
-        //     url,
-        //     { object_id: object_id },
-        //     function (data) {
-
-        //     });
-        // return false;
+        reference_filter = $("select option:selected").val();
+        url = $("#annotation_view_url").val();
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {reference_filter: reference_filter},
+            success: function(val) {
+                alert(val);
+            },
+            error: function(val) {
+                alert(val);
+            }
+        });
+         return false;
     });
 }
 
