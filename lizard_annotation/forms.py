@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.translation import pgettext
+from django.utils.translation import ugettext
 
 from models import Annotation
 from models import AnnotationStatus
@@ -24,23 +24,24 @@ annotation_type_choices = tuple(
 
 class AnnotationForm(forms.Form):
     """Form for editing of annotations."""
-    title = forms.CharField()
+    title = forms.CharField(
+        label=ugettext(u'Title'),
+    )
 
     status = forms.ChoiceField(
-        label=pgettext(__name__, u'Status'),
+        label=ugettext(u'Status'),
         choices=annotation_status_choices,
     )
     category = forms.ChoiceField(
-        label=pgettext(__name__, u'Category'),
+        label=ugettext(u'Category'),
         choices=annotation_category_choices,
     )
     annotation_type = forms.ChoiceField(
-        label=pgettext(__name__, u'Annotation type'),
+        label=ugettext(u'Annotation type'),
         choices=annotation_type_choices,
     )
 
     
-
     def clean_status(self):
         """Return the Status object."""
         status = self.cleaned_data['status']

@@ -6,6 +6,7 @@ from django.contrib import admin
 
 from lizard_ui.urls import debugmode_urlpatterns
 from lizard_annotation.views import AnnotationEditView
+from lizard_annotation.views import AnnotationDetailView
 from lizard_annotation.views import AnnotationView
 from django.views.generic import ListView
 
@@ -17,6 +18,9 @@ urlpatterns = patterns(
     url(r'^edit/',
         AnnotationEditView.as_view(),
         name='edit_view'),
+    url(r'^detail/$',
+        AnnotationDetailView.as_view(),
+        name='annotation_detail'),
     url(r'^view/$',
         AnnotationView.as_view(),
         name='a_view'),

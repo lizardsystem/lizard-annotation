@@ -7,45 +7,41 @@
 {% endblock %}
 {% block content %}
 {{ block.super }}
+<div>
   <select id="reference_objects">
-    {% for obj in reference_objects %}
+    {% for obj in view.reference_objects %}
     <option value="{{ obj.reference_model }}{{ obj.reference_id }}">
     {{ obj.reference_name }}
     </option>
     {% endfor %}
   </select>
-  <input id="annotation_view_url" type="HIDDEN" value="{% url lizard-annotation:a_view %}" />
-
-<div>
-
-<table>
-  <th>Titel</th>
-  <th>Categorie</th>
-  <th>Status</th>
-  <th>Datum</th>
-  <th>Door</th>
-{% for annotation in annotations %}
-    <tr>
-      <td><a href="">{{ annotation.title }}</a></td>
-      <td>{{ annotation.category }}</td>
-      <td>{{ annotation.status }}</td>
-      <td>{{ annotation.dt_creation }}</td>
-      <td>{{ annotation.user_creator }}</td>
-    </tr>
-{% endfor %}
-  <tr>
-    <td>
-      <button id="annotation_view_cancel" type="button">Annuleer</button>
-      <button id="annotation_view_new" type="button">Nieuw</button>
-    </td>
-  </tr>
-</tabel>
-
-
+ <input id="annotation_view_url" type="HIDDEN" value="{% url lizard-annotation:a_view %}" />
 </div>
 
+<div>
+  <table id="annotation_table"  class="sortable-table">
+    <thead>
+      <tr>
+        <th>Titel</th>
+        <th>Categorie</th>
+        <th>Status</th>
+        <th>Datum</th>
+        <th>Door</th>
+      </tr>
+    </thead>
+    <tbody>
+  {% for annotation in view.annotations %}
+      <tr>
+        <td><a href="">{{ annotation.title }}</a></td>
+        <td>{{ annotation.category }}</td>
+        <td>{{ annotation.status }}</td>
+        <td>{{ annotation.dt_creation }}</td>
+        <td>{{ annotation.user_creator }}</td>
+      </tr>
+  {% endfor %}
+    </tbody>
+  </table>
+  <button id="annotation_view_cancel" type="button">Annuleer</button>
+  <button id="annotation_view_new" type="button">Nieuw</button>
+</div>
 {% endblock content %}
-
-<div>
-
-</div>

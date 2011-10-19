@@ -3,40 +3,38 @@
 # Create your views here.
 
 from django.views.generic import FormView
-from django.utils.translation import pgettext
+from django.utils.translation import pgettext 
 from django.utils.translation import ugettext
 from django.views.generic import TemplateView
+from django.views.generic import DetailView
 
 from lizard_annotation.forms import AnnotationForm
 from lizard_annotation.models import Annotation
 from lizard_annotation.models import AnnotationStatus
+from lizard_ui.views import ViewContextMixin
 from lizard_map.views import AppView
 
 from lizard_annotation.mongodb_queries import annotations_list
 
-class AnnotationEditView(FormView):
+class AnnotationDetailView(ViewContextMixin, DetailView):
+
+    template_name = 'lizard_annotation/annotation_form.html'
+
+
+class AnnotationEditView(ViewContextMixin, FormView):
 
     template_name = 'lizard_annotation/annotation_form.html'
     form_class = AnnotationForm
     # TODO Add a nice success page
     success_url = '.'
 
+    labels = {
+        'save': pgettext(u'Save the contents of a form', 'Save'),
+    }
+
     def form_valid(self, form):
         Annotation(**form.cleaned_data).save()
         return super(FormView, self).form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        """ Add extra label context to the context data."""
-        context = super(AnnotationEditView, self).get_context_data(**kwargs)
-
-        kwargs.update({
-            'label': {
-                'save': pgettext(__name__, u'Save'),
-                'load': ugettext(u'Load'),
-            },
-        })
-
-        return kwargs
 
 
 class AnnotationView(TemplateView):
