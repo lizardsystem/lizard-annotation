@@ -29,14 +29,25 @@ DATABASES = {
     # the specified database exists. When the tests cannot run, Jenkins sees
     # that as an error.
     'default': {
-        'NAME': os.path.join(BUILDOUT_DIR, 'var', 'sqlite', 'test.db'),
-        'ENGINE': 'django.db.backends.sqlite3',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',  # empty string for localhost.
+        'NAME': 'vss',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'USER': 'buildout',
+        'PASSWORD': 'buildout',
+        'HOST': '127.0.0.1',  # empty string for localhost.
         'PORT': '',  # empty string for default.
         }
     }
+
+MONGODB_SETTINGS = {
+    'username': 'buildout',
+    'password': 'buildout',
+    'host': 'localhost',
+    'port': 27017
+}
+
+import mongoengine
+mongoengine.connect('test',**MONGODB_SETTINGS)
+
 SITE_ID = 1
 INSTALLED_APPS = [
     'lizard_annotation',

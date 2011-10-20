@@ -24,39 +24,39 @@ def insert_dummy_data():
 
 
 def insert_dummy_categories():
-    categories =[
+    annotation_type = AnnotationType.objects.filter(**{
+                    "annotation_type": "interpretatie"})[0]
+    categories = [
         {
             "category": "Ecologie",
-            "annotation_type": AnnotationType.objects.filter( **{
-                    "annotation_type": "interpretatie"} )[0]
+            "annotation_type": annotation_type
         },
         {
             "category": "onderzoek Kwantiteit",
-            "annotation_type": AnnotationType.objects.filter( **{
-                    "annotation_type": "interpretatie"} )[0]
+            "annotation_type": annotation_type
         },
         {
             "category": "In",
-            "annotation_type": AnnotationType.objects.filter( **{
-                    "annotation_type": "interpretatie"} )[0]
+            "annotation_type": annotation_type
         },
         {
             "category": "Algemeen",
-            "annotation_type": AnnotationType.objects.filter( **{
-                    "annotation_type": "interpretatie"} )[0]
+            "annotation_type": annotation_type
         },
         {
             "category": "Waterkwaliteit",
-            "annotation_type": AnnotationType.objects.filter( **{
-                    "annotation_type": "interpretatie"} )[0]
+            "annotation_type": annotation_type
         }]
 
     for item in categories:
         obj = AnnotationCategory(**item)
         obj.save()
 
+
 def insert_dummy_annotationtypes(annotation_types=None):
-    if annotation_types is None:
+    """ Expects a list with strings if not uses
+    dummy list."""
+    if not isinstance(annotation_types, list):
         annotation_types = ["interpretatie",
                             "actie",
                             "veldwaarneming"]
@@ -65,37 +65,38 @@ def insert_dummy_annotationtypes(annotation_types=None):
         obj.annotation_type = item
         obj.save()
 
+
 def insert_dummy_annotationstatuses():
+    annotationtype_interp = AnnotationType.objects.filter(**{
+            "annotation_type": "interpretatie"})[0]
+    annotationtype_action = AnnotationType.objects.filter(**{
+            "annotation_type": "actie"})[0]
     statuses = [
         {
             "status": "In bewerking",
-            "annotation_type": AnnotationType.objects.get(
-                annotation_type='interpretatie')
+            "annotation_type": annotationtype_interp
         },
         {
             "status": "Concept",
-            "annotation_type": AnnotationType.objects.get(
-                annotation_type='interpretatie')
+            "annotation_type": annotationtype_interp
         },
         {
             "status": "Bewerking",
-            "annotation_type": AnnotationType.objects.get(
-                annotation_type='interpretatie')
+            "annotation_type": annotationtype_interp
         },
         {
             "status": "Definitief",
-            "annotation_type": AnnotationType.objects.get(
-                annotation_type='interpretatie')
+            "annotation_type": annotationtype_interp
         },
         {
             "status": "Afgehandeld",
-            "annotation_type": AnnotationType.objects.get(
-                annotation_type='actie')
+            "annotation_type": annotationtype_action
         }]
 
     for item in statuses:
         obj = AnnotationStatus(**item)
         obj.save()
+
 
 def insert_dummy_annotations():
 
@@ -103,39 +104,41 @@ def insert_dummy_annotations():
     obj_a.reference_id = 100
     obj_a.reference_model = "Gebied"
     obj_a.reference_name = "Aan-afvoergebied A"
-    obj_a.reference_filter = "%s%d" % (obj_a.reference_model, obj_a.reference_id)
+    obj_a.reference_filter = "%s%d" % (obj_a.reference_model,
+                                       obj_a.reference_id)
 
     obj_b = ReferenceObject()
     obj_b.reference_id = 200
     obj_b.reference_model = "Gebied"
     obj_b.reference_name = "Aan-afvoergebied B"
-    obj_b.reference_filter = "%s%d" % (obj_b.reference_model, obj_b.reference_id)
+    obj_b.reference_filter = "%s%d" % (obj_b.reference_model,
+                                       obj_b.reference_id)
 
     annotations = [
         {
         "title": "Licht doorlatenheid en milieu vriendelijke oevers",
-        "status": AnnotationStatus.objects.filter( **{
-                "status": "In bewerking"} )[0],
-        "annotation_type": AnnotationType.objects.filter( **{
-                "annotation_type": "interpretatie"} )[0],
-        "category":  AnnotationCategory.objects.filter( **{
-                "category": "Ecologie"} )[0],
+        "status": AnnotationStatus.objects.filter(**{
+                "status": "In bewerking"})[0],
+        "annotation_type": AnnotationType.objects.filter(**{
+                "annotation_type": "interpretatie"})[0],
+        "category":  AnnotationCategory.objects.filter(**{
+                "category": "Ecologie"})[0],
         "user_creator": "Alexandr",
         "dt_creation": datetime.today(),
-        "reference_objects": { obj_a.reference_filter: obj_a,
-                               obj_b.reference_filter: obj_b }
+        "reference_objects": {obj_a.reference_filter: obj_a,
+                              obj_b.reference_filter: obj_b}
         },
         {
         "title": "Kroos",
-        "status": AnnotationStatus.objects.filter( **{
-                "status": "Concept"} )[0],
-        "annotation_type": AnnotationType.objects.filter( **{
-                "annotation_type": "interpretatie"} )[0],
-        "category":  AnnotationCategory.objects.filter( **{
-                "category": "onderzoek Kwantiteit"} )[0],
+        "status": AnnotationStatus.objects.filter(**{
+                "status": "Concept"})[0],
+        "annotation_type": AnnotationType.objects.filter(**{
+                "annotation_type": "interpretatie"})[0],
+        "category":  AnnotationCategory.objects.filter(**{
+                "category": "onderzoek Kwantiteit"})[0],
         "user_creator": "Alexandr",
         "dt_creation": datetime.today(),
-        "reference_objects": { obj_a.reference_filter: obj_a }
+        "reference_objects": {obj_a.reference_filter: obj_a}
         }
     ]
 
@@ -143,8 +146,11 @@ def insert_dummy_annotations():
         annotation = Annotation(**item)
         annotation.save()
 
-def annotations_list(reference_filter):
-    key = "reference_objects__%s" % reference_filter
-    f = { key: { "$exists": True } }
-    return Annotation.objects(**f)
 
+def annotations_list(reference_filter):
+    if reference_filter:
+        key = "reference_objects__%s" % reference_filter
+        f = {key: {"$exists": True}}
+        return Annotation.objects(**f)
+    else:
+        return Annotation.objects[:1]
