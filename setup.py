@@ -17,6 +17,7 @@ install_requires = [
     'pkginfo',
     'pymongo',
     'mongoengine',
+    'djangorestframework',
     ],
 
 tests_require = [

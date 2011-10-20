@@ -12,9 +12,13 @@ from django.views.generic import ListView
 
 admin.autodiscover()
 
+API_URL_NAME = 'lizard_annotation_api_root'
+NAME_PREFIX = 'lizard_annotation_'
+
 urlpatterns = patterns(
     '',
     (r'^admin/', include(admin.site.urls)),
+    (r'^api/', include('lizard_annotation.api.urls')),
     url(r'^edit/',
         AnnotationEditView.as_view(),
         name='edit_view'),
