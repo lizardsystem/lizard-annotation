@@ -3,67 +3,75 @@
 
 import logging
 import datetime
+import mongoengine
 
-from mongoengine import StringField
-from mongoengine import IntField
-from mongoengine import DateTimeField
-from mongoengine import ListField
-from mongoengine import DictField
-from mongoengine import ReferenceField
-from mongoengine import EmbeddedDocument
-from mongoengine import EmbeddedDocumentField
-from mongoengine import Document
+from django.core.urlresolvers import reverse
 
 
-class ReferenceObject(EmbeddedDocument):
+class ReferenceObject(mongoengine.EmbeddedDocument):
 
-    reference_id = IntField()
-    reference_model = StringField()
-    reference_name = StringField()
-    reference_filter = StringField()
+    reference_id = mongoengine.IntField()
+    reference_model = mongoengine.StringField()
+    reference_name = mongoengine.StringField()
+    reference_filter = mongoengine.StringField()
+
+    def __unicode__(self):
+        return self.reference_filter
 
 
-class AnnotationType(Document):
+class AnnotationType(mongoengine.Document):
 
-    annotation_type = StringField()
+    annotation_type = mongoengine.StringField()
 
     def __unicode__(self):
         return self.annotation_type
 
+    def get_absolute_url(self):
+        return reverse('lizard_annotation_api_type', kwargs={'pk': self.pk})
 
-class AnnotationCategory(Document):
 
-    category = StringField()
-    annotation_type =  ReferenceField(AnnotationType)
+class AnnotationCategory(mongoengine.Document):
+
+    category = mongoengine.StringField()
+    annotation_type = mongoengine.ReferenceField(AnnotationType)
 
     def __unicode__(self):
         return self.category
 
+    def get_absolute_url(self):
+        return reverse('lizard_annotation_api_category', kwargs={'pk': self.pk})
 
-class AnnotationStatus(Document):
 
-    status = StringField()
-    annotation_type = ReferenceField(AnnotationType)
+class AnnotationStatus(mongoengine.Document):
+
+    status = mongoengine.StringField()
+    annotation_type = mongoengine.ReferenceField(AnnotationType)
 
     def __unicode__(self):
         return self.status
 
+    def get_absolute_url(self):
+        return reverse('lizard_annotation_api_status', kwargs={'pk': self.pk})
 
-class Annotation(Document):
+
+class Annotation(mongoengine.Document):
     """
     reference_object field expects a dict. object
-    like {"Gebied100": ReletionObject,}.
+    like {"Gebied100": RelatedObject,}.
     """
 
-    title = StringField()
-    status =  ReferenceField(AnnotationStatus)
-    annotation_type =  ReferenceField(AnnotationType)
-    category = ReferenceField(AnnotationCategory)
-    user_creator = StringField()
-    user_modifier = StringField()
-    dt_creation = DateTimeField()
-    dt_modification = DateTimeField()
-    reference_objects = DictField()
+    title = mongoengine.StringField()
+    status =  mongoengine.ReferenceField(AnnotationStatus)
+    annotation_type = mongoengine.ReferenceField(AnnotationType)
+    category = mongoengine.ReferenceField(AnnotationCategory)
+    user_creator = mongoengine.StringField()
+    user_modifier = mongoengine.StringField()
+    dt_creation = mongoengine.DateTimeField()
+    dt_modification = mongoengine.DateTimeField()
+    reference_objects = mongoengine.DictField()
 
     def __unicode__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('lizard_annotation_api_annotation', kwargs={'pk': self.pk})
