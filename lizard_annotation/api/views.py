@@ -19,13 +19,20 @@ class RootView(View):
          return {
             "annotations": reverse(
                 'lizard_annotation_api_annotation_root'),
+            "annotation statuses": reverse(
+                'lizard_annotation_api_annotation_status_root'),
+            "annotation categories": reverse(
+                'lizard_annotation_api_annotation_category_root'),
+            "annotation types": reverse(
+                'lizard_annotation_api_annotation_type_root'),
             }
 
 
 class AnnotationRootView(View):
     def get(self, request):
-        """Return annotationlist with links to category, status objects, and
-        link to annotationdetail which can be posted or edited."""
+        """
+        Return annotationlist.
+        """
         return {
             'annotations': [
                 {
@@ -57,11 +64,59 @@ class AnnotationStatusView(View):
         return AnnotationStatus.objects.get(pk=pk)
 
 
+class AnnotationStatusRootView(View):
+    def get(self, request):
+        """
+        Return annotationstatus list.
+        """
+        return {
+            'statuses': [
+                {
+                    'status': status.status,
+                    'url': status.get_absolute_url()
+                }
+                for status in AnnotationStatus.objects.all()
+            ]
+        }
+
+
 class AnnotationCategoryView(View):
     def get(self, request, pk):
         return AnnotationCategory.objects.get(pk=pk)
 
 
+class AnnotationCategoryRootView(View):
+    def get(self, request):
+        """
+        Return annotationcategory list.
+        """
+        return {
+            'categories': [
+                {
+                    'category': category.category,
+                    'url': category.get_absolute_url()
+                }
+                for category in AnnotationCategory.objects.all()
+            ]
+        }
+
+        
 class AnnotationTypeView(View):
     def get(self, request, pk):
         return AnnotationType.objects.get(pk=pk)
+
+
+class AnnotationTypeRootView(View):
+    def get(self, request):
+        """
+        Return annotationtype list.
+        """
+        return {
+            'types': [
+                {
+                    'type': type.annotation_type,
+                    'url': type.get_absolute_url()
+                }
+                for type in AnnotationType.objects.all()
+            ]
+        }
