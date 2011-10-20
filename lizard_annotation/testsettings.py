@@ -52,9 +52,11 @@ SITE_ID = 1
 INSTALLED_APPS = [
     'lizard_annotation',
     'lizard_ui',
+    'lizard_map',
+    'lizard_api',
     'staticfiles',
     'compressor',
-    'south',
+    #'south',
     'django_nose',
     'django_extensions',
     'django.contrib.admin',
@@ -63,6 +65,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.gis',
     'django.contrib.sites',
+    'djangorestframework',
+    'matplotlib',
+    'mongoengine',
+    'pymongo',
     ]
 ROOT_URLCONF = 'lizard_annotation.urls'
 
