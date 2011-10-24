@@ -2,10 +2,10 @@ Changelog of lizard-annotation
 ===================================================
 
 
-0.2 (unreleased)
-----------------
+0.1.1 (2011-10-24)
+------------------
 
-- Nothing changed yet.
+- Cleaned up the api code.
 
 
 0.1 (2011-10-24)

@@ -3,10 +3,6 @@ from django.conf.urls.defaults import patterns
 from django.conf.urls.defaults import url
 from django.contrib import admin
 
-from djangorestframework.views import InstanceModelView
-
-from lizard_annotation.api.resources import AnnotationResource
-
 from lizard_annotation.api.views import RootView
 from lizard_annotation.api.views import AnnotationRootView
 from lizard_annotation.api.views import AnnotationView

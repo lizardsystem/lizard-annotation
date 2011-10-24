@@ -1,9 +1,9 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 
 from djangorestframework.resources import ModelResource
-from djangorestframework.utils import as_tuple
 
 from lizard_annotation.models import Annotation
+
 
 class AnnotationResource(ModelResource):
     """
