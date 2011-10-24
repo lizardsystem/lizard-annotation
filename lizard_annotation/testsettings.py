@@ -42,21 +42,20 @@ MONGODB_SETTINGS = {
     'username': 'buildout',
     'password': 'buildout',
     'host': 'localhost',
-    'port': 27017
+    'port': 27017,
 }
 
 import mongoengine
-mongoengine.connect('test',**MONGODB_SETTINGS)
+mongoengine.connect('annotation', **MONGODB_SETTINGS)
 
 SITE_ID = 1
 INSTALLED_APPS = [
     'lizard_annotation',
     'lizard_ui',
     'lizard_map',
-    'lizard_api',
     'staticfiles',
     'compressor',
-    #'south',
+    'south',
     'django_nose',
     'django_extensions',
     'django.contrib.admin',
@@ -66,11 +65,13 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'django.contrib.sites',
     'djangorestframework',
-    'matplotlib',
     'mongoengine',
     'pymongo',
-    ]
+]
+
 ROOT_URLCONF = 'lizard_annotation.urls'
+
+SOUTH_TESTS_MIGRATE = False
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     # Uncomment this one if you use lizard-map.
@@ -81,8 +82,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "django.core.context_processors.static",
-    "django.contrib.messages.context_processors.messages"
-    )
+    "django.contrib.messages.context_processors.messages",
+)
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 

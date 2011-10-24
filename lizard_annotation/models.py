@@ -1,8 +1,6 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 # from django.db import models
 
-import logging
-import datetime
 import mongoengine
 
 from django.core.urlresolvers import reverse
@@ -39,7 +37,10 @@ class AnnotationCategory(mongoengine.Document):
         return self.category
 
     def get_absolute_url(self):
-        return reverse('lizard_annotation_api_category', kwargs={'pk': self.pk})
+        return reverse(
+            'lizard_annotation_api_category',
+            kwargs={'pk': self.pk},
+        )
 
 
 class AnnotationStatus(mongoengine.Document):
@@ -61,7 +62,7 @@ class Annotation(mongoengine.Document):
     """
 
     title = mongoengine.StringField()
-    status =  mongoengine.ReferenceField(AnnotationStatus)
+    status = mongoengine.ReferenceField(AnnotationStatus)
     annotation_type = mongoengine.ReferenceField(AnnotationType)
     category = mongoengine.ReferenceField(AnnotationCategory)
     user_creator = mongoengine.StringField()
@@ -74,4 +75,7 @@ class Annotation(mongoengine.Document):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('lizard_annotation_api_annotation', kwargs={'pk': self.pk})
+        return reverse(
+            'lizard_annotation_api_annotation',
+            kwargs={'pk': self.pk},
+        )

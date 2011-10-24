@@ -1,19 +1,23 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 
+import logging
 import mongoengine
 from django.test import TestCase
 
 from lizard_annotation import models as m
 from lizard_annotation import mongodb_queries as qrs
 
+logger = logging.getLogger(__name__)
+
 
 class TransactionTest(TestCase):
 
     def setUp(self):
-        m.Annotation.drop_collection()
-        m.AnnotationType.drop_collection()
-        m.AnnotationStatus.drop_collection()
-        m.AnnotationCategory.drop_collection()
+        """
+        Clear the collections in the testdatabase.
+        """
+        for cls in mongoengine.Document.__subclasses__():
+            cls.drop_collection()
 
     def test_annotation_types_published_1(self):
         """ Tests inserting annotation types function with out args."""
@@ -48,7 +52,8 @@ class TransactionTest(TestCase):
         self.assertNotEqual(len(m.Annotation.objects()), 0)
 
     def tearDown(self):
-        m.Annotation.drop_collection()
-        m.AnnotationType.drop_collection()
-        m.AnnotationStatus.drop_collection()
-        m.AnnotationCategory.drop_collection()
+        """
+        Clear the collections in the testdatabase.
+        """
+        for cls in mongoengine.Document.__subclasses__():
+            cls.drop_collection()

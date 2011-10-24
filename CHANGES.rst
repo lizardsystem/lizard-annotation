@@ -13,3 +13,6 @@ Changelog of lizard-annotation
 
 - Changed annotation model, reference_objects expects a dict. object
   where key is a string of [model_name + record_id] and value is ReferenceObject().
+
+- Added djangorestframework and an api module with urls and views for the
+  various annotation models

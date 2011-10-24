@@ -8,7 +8,6 @@ from lizard_ui.urls import debugmode_urlpatterns
 from lizard_annotation.views import AnnotationEditView
 from lizard_annotation.views import AnnotationDetailView
 from lizard_annotation.views import AnnotationView
-from django.views.generic import ListView
 
 admin.autodiscover()
 
@@ -24,10 +23,10 @@ urlpatterns = patterns(
         name='edit_view'),
     url(r'^detail/$',
         AnnotationDetailView.as_view(),
-        name='annotation_detail'),
+        name=NAME_PREFIX + 'detail'),
     url(r'^view/$',
         AnnotationView.as_view(),
-        name='a_view'),
+        name=NAME_PREFIX + 'view'),
     # url(r'^something/',
     #     direct.import.views.some_method,
     #     name="name_it"),

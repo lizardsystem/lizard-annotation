@@ -29,23 +29,23 @@ def insert_dummy_categories():
     categories = [
         {
             "category": "Ecologie",
-            "annotation_type": annotation_type
+            "annotation_type": annotation_type,
         },
         {
             "category": "onderzoek Kwantiteit",
-            "annotation_type": annotation_type
+            "annotation_type": annotation_type,
         },
         {
             "category": "In",
-            "annotation_type": annotation_type
+            "annotation_type": annotation_type,
         },
         {
             "category": "Algemeen",
-            "annotation_type": annotation_type
+            "annotation_type": annotation_type,
         },
         {
             "category": "Waterkwaliteit",
-            "annotation_type": annotation_type
+            "annotation_type": annotation_type,
         }]
 
     for item in categories:
@@ -74,23 +74,23 @@ def insert_dummy_annotationstatuses():
     statuses = [
         {
             "status": "In bewerking",
-            "annotation_type": annotationtype_interp
+            "annotation_type": annotationtype_interp,
         },
         {
             "status": "Concept",
-            "annotation_type": annotationtype_interp
+            "annotation_type": annotationtype_interp,
         },
         {
             "status": "Bewerking",
-            "annotation_type": annotationtype_interp
+            "annotation_type": annotationtype_interp,
         },
         {
             "status": "Definitief",
-            "annotation_type": annotationtype_interp
+            "annotation_type": annotationtype_interp,
         },
         {
             "status": "Afgehandeld",
-            "annotation_type": annotationtype_action
+            "annotation_type": annotationtype_action,
         }]
 
     for item in statuses:
@@ -116,30 +116,31 @@ def insert_dummy_annotations():
 
     annotations = [
         {
-        "title": "Licht doorlatenheid en milieu vriendelijke oevers",
-        "status": AnnotationStatus.objects.filter(**{
-                "status": "In bewerking"})[0],
-        "annotation_type": AnnotationType.objects.filter(**{
-                "annotation_type": "interpretatie"})[0],
-        "category":  AnnotationCategory.objects.filter(**{
-                "category": "Ecologie"})[0],
-        "user_creator": "Alexandr",
-        "dt_creation": datetime.today(),
-        "reference_objects": {obj_a.reference_filter: obj_a,
-                              obj_b.reference_filter: obj_b}
+            "title": "Licht doorlatenheid en milieu vriendelijke oevers",
+            "status": AnnotationStatus.objects.filter(**{
+                    "status": "In bewerking"})[0],
+            "annotation_type": AnnotationType.objects.filter(**{
+                    "annotation_type": "interpretatie"})[0],
+            "category":  AnnotationCategory.objects.filter(**{
+                    "category": "Ecologie"})[0],
+            "user_creator": "Alexandr",
+            "dt_creation": datetime.today(),
+            "reference_objects": {
+                obj_a.reference_filter: obj_a,
+                obj_b.reference_filter: obj_b},
         },
         {
-        "title": "Kroos",
-        "status": AnnotationStatus.objects.filter(**{
-                "status": "Concept"})[0],
-        "annotation_type": AnnotationType.objects.filter(**{
-                "annotation_type": "interpretatie"})[0],
-        "category":  AnnotationCategory.objects.filter(**{
-                "category": "onderzoek Kwantiteit"})[0],
-        "user_creator": "Alexandr",
-        "dt_creation": datetime.today(),
-        "reference_objects": {obj_a.reference_filter: obj_a}
-        }
+            "title": "Kroos",
+            "status": AnnotationStatus.objects.filter(**{
+                    "status": "Concept"})[0],
+            "annotation_type": AnnotationType.objects.filter(**{
+                    "annotation_type": "interpretatie"})[0],
+            "category":  AnnotationCategory.objects.filter(**{
+                    "category": "onderzoek Kwantiteit"})[0],
+            "user_creator": "Alexandr",
+            "dt_creation": datetime.today(),
+            "reference_objects": {obj_a.reference_filter: obj_a},
+        },
     ]
 
     for item in annotations:
