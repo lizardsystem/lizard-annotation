@@ -65,6 +65,8 @@ class Annotation(mongoengine.Document):
     status = mongoengine.ReferenceField(AnnotationStatus)
     annotation_type = mongoengine.ReferenceField(AnnotationType)
     category = mongoengine.ReferenceField(AnnotationCategory)
+    period_start = mongoengine.DateTimeField()
+    period_end = mongoengine.DateTimeField()
     user_creator = mongoengine.StringField()
     user_modifier = mongoengine.StringField()
     dt_creation = mongoengine.DateTimeField()

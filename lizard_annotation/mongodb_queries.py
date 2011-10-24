@@ -125,6 +125,8 @@ def insert_dummy_annotations():
                     "category": "Ecologie"})[0],
             "user_creator": "Alexandr",
             "dt_creation": datetime.today(),
+            "period_start": datetime.today(),
+            "period_end": None,
             "reference_objects": {
                 obj_a.reference_filter: obj_a,
                 obj_b.reference_filter: obj_b},
@@ -139,6 +141,8 @@ def insert_dummy_annotations():
                     "category": "onderzoek Kwantiteit"})[0],
             "user_creator": "Alexandr",
             "dt_creation": datetime.today(),
+            "period_start": datetime.today(),
+            "period_end": None,
             "reference_objects": {obj_a.reference_filter: obj_a},
         },
     ]

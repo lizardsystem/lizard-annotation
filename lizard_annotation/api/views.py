@@ -34,13 +34,27 @@ class AnnotationRootView(View):
         """
         Return annotationlist.
         """
+        annotation_type = request.GET.get('type')
+        if annotation_type:
+            type_obj = AnnotationType.objects.get(
+                annotation_type=annotation_type)
+            annotations = Annotation.objects.filter(
+                annotation_type=type_obj)
+        else:
+            annotations = Annotation.objects.all()
         return {
             'annotations': [
                 {
                     'title': annotation.title,
-                    'url': annotation.get_absolute_url(),
+                    'annotation_type': annotation.annotation_type,
+                    'status': annotation.status,
+                    'category': annotation.category,
+                    'period_start': annotation.period_start,
+                    'period_end': annotation.period_end,
+                    'user_creator': annotation.user_creator,
+                    'id': annotation.id,
                 }
-                for annotation in Annotation.objects.all()]
+                for annotation in annotations]
         }
 
 
