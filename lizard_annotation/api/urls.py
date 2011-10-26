@@ -4,6 +4,7 @@ from django.conf.urls.defaults import url
 from django.contrib import admin
 
 from lizard_annotation.api.views import RootView
+from lizard_annotation.api.views import AnnotationGridView
 from lizard_annotation.api.views import AnnotationRootView
 from lizard_annotation.api.views import AnnotationView
 from lizard_annotation.api.views import AnnotationStatusRootView
@@ -25,6 +26,9 @@ urlpatterns = patterns(
     url(r'^annotation/$',
         AnnotationRootView.as_view(),
         name=NAME_PREFIX + 'annotation_root'),
+    url(r'^grid/$',
+        AnnotationGridView.as_view(),
+        name=NAME_PREFIX + 'annotation_grid'),
     url(r'^annotation/(?P<pk>[0-9a-f]+)/$',
         AnnotationView.as_view(),
         name=NAME_PREFIX + 'annotation'),

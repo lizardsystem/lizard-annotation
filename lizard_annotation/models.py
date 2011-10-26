@@ -1,5 +1,4 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
-# from django.db import models
 
 import mongoengine
 
@@ -60,18 +59,20 @@ class Annotation(mongoengine.Document):
     reference_object field expects a dict. object
     like {"Gebied100": RelatedObject,}.
     """
-
     title = mongoengine.StringField()
+    description = mongoengine.StringField()
+    datetime_period_start = mongoengine.DateTimeField()
+    datetime_period_end = mongoengine.DateTimeField()
+    # References
     status = mongoengine.ReferenceField(AnnotationStatus)
     annotation_type = mongoengine.ReferenceField(AnnotationType)
     category = mongoengine.ReferenceField(AnnotationCategory)
-    period_start = mongoengine.DateTimeField()
-    period_end = mongoengine.DateTimeField()
-    user_creator = mongoengine.StringField()
-    user_modifier = mongoengine.StringField()
-    dt_creation = mongoengine.DateTimeField()
-    dt_modification = mongoengine.DateTimeField()
     reference_objects = mongoengine.DictField()
+    # Journaling
+    datetime_created = mongoengine.DateTimeField()
+    created_by = mongoengine.StringField()
+    datetime_modified = mongoengine.DateTimeField()
+    modified_by = mongoengine.StringField()
 
     def __unicode__(self):
         return self.title

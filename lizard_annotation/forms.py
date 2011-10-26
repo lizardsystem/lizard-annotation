@@ -1,10 +1,12 @@
 from django import forms
+from django.forms.extras import widgets
 from django.utils.translation import ugettext
 
 from models import AnnotationStatus
 from models import AnnotationCategory
 from models import AnnotationType
 
+from lizard_annotation.api.utils import wrap_datetime
 
 annotation_status_choices = [(ans.status, ans.status)
                              for ans in AnnotationStatus.objects.all()]
@@ -21,7 +23,28 @@ class AnnotationForm(forms.Form):
     title = forms.CharField(
         label=ugettext(u'Title'),
     )
-
+    description = forms.CharField(
+        label=ugettext('Description'),
+        widget=forms.Textarea,
+    )
+    date_period_start = forms.DateField(
+        label=ugettext('Start date of period'),
+        widget=forms.DateInput,
+    )
+    time_period_start = forms.TimeField(
+        label=ugettext('Start time of period'),
+        widget=forms.TimeInput,
+    )
+    date_period_end = forms.DateField(
+        required=False,
+        label=ugettext('End date of period'),
+        widget=forms.DateInput,
+    )
+    time_period_end = forms.TimeField(
+        required=False,
+        label=ugettext('End time of period'),
+        widget=forms.TimeInput,
+    )
     status = forms.ChoiceField(
         label=ugettext(u'Status'),
         choices=annotation_status_choices,
@@ -34,6 +57,13 @@ class AnnotationForm(forms.Form):
         label=ugettext(u'Annotation type'),
         choices=annotation_type_choices,
     )
+
+    #reference_objects = mongoengine.DictField()
+    # Journaling
+    #date_created = mongoengine.DateTimeField()
+    #created_by = mongoengine.StringField()
+    #date_modified = mongoengine.DateTimeField()
+    #modified_by = mongoengine.StringField()
 
     def clean_status(self):
         """Return the Status object."""
@@ -52,3 +82,6 @@ class AnnotationForm(forms.Form):
         annotation_type = self.cleaned_data['annotation_type']
         obj = AnnotationType.objects.get(annotation_type=annotation_type)
         return obj
+
+    def clean(self):
+        return wrap_datetime(self.cleaned_data)
