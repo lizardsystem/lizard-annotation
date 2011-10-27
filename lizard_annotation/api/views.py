@@ -1,5 +1,5 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
-
+   
 import re
 import datetime
 import mongoengine
@@ -18,11 +18,21 @@ from lizard_annotation.models import AnnotationStatus
 from lizard_annotation.models import AnnotationCategory
 
 from lizard_annotation.forms import AnnotationForm
+from lizard_annotation.forms import StatusForm
+from lizard_annotation.forms import CategoryForm
+from lizard_annotation.forms import TypeForm
+from lizard_annotation import forms
 
 from lizard_annotation.api.utils import unwrap_datetime
 
 import logging
 logger = logging.getLogger(__name__)
+
+"""
+Beware that the djangorestframework trips if you name an attribute of
+the view 'model', and also if one of the methods return a dict with a key
+'model' in it. Hence the attribute 'document' on a number of classes
+"""
 
 
 class RootView(View):
@@ -32,9 +42,9 @@ class RootView(View):
     def get(self, request):
         return {
             "annotations grid": reverse(
-                'lizard_annotation_api_annotation_root'),
-            "annotations": reverse(
                 'lizard_annotation_api_annotation_grid'),
+            "annotations": reverse(
+                'lizard_annotation_api_annotation_root'),
             "annotation statuses": reverse(
                 'lizard_annotation_api_annotation_status_root'),
             "annotation categories": reverse(
@@ -46,19 +56,18 @@ class RootView(View):
 
 class AnnotationGridView(View):
     """
-    Show a complete list of all annotations with all annotation
+    Show a (filtered) list of annotations with all annotation
     fields.
+    
     """
-        
     def get(self, request):
         """
         Return annotationgrid.
 
         TODO Add some pagination if the grid gets really long.
         """
-        annotation_type = request.GET.get('type')
-
         # Handle additional filtering
+        annotation_type = request.GET.get('type')
         if annotation_type:
             try:
                 type_obj = AnnotationType.objects.get(
@@ -71,118 +80,109 @@ class AnnotationGridView(View):
             annotations = Annotation.objects.all()
 
         return {'annotations': [
-            dict([('url', a.get_absolute_url())] +
-                 [(k, a[k]) for k in a])
-            for a in annotations]}
+            a.get_dict(url=True, ref_urls=True)
+            for a in annotations()
+        ]}
 
-
-class AnnotationRootView(View):
+class DocumentRootView(View):
+    """
+    Baseview for root views.
+    
+    Subclasses must set the document attribute.
+    """
     def get(self, request):
         """
-        Return annotationlist.
+        Read a document list. Assumes documents have a get_absolute_url()
+        method implemented.
         """
-        annotation_type = request.GET.get('type')
-        if annotation_type:
-            type_obj = AnnotationType.objects.get(
-                annotation_type=annotation_type)
-            annotations = Annotation.objects.filter(
-                annotation_type=type_obj)
-        else:
-            annotations = Annotation.objects.all()
+        return [[d, d.get_absolute_url()]
+                for d in self.document.objects.all()]
+    
 
-        return {
-            'annotations': [
-                {
-                    'url': annotation.get_absolute_url()
-                }
-                for annotation in annotations]
-        }
-
-
-class AnnotationView(View):
+class AnnotationRootView(DocumentRootView):
     """
-    Detailview for Annotations allowing get and post.
+    View all annotations.
     """
+    document = Annotation
+
+
+class AnnotationTypeRootView(DocumentRootView):
+    """
+    View all types.
+    """
+    document = AnnotationType
+
+
+class AnnotationCategoryRootView(DocumentRootView):
+    """
+    View all categories.
+    """
+    document = AnnotationCategory
+
+
+class AnnotationStatusRootView(DocumentRootView):
+    """
+    View all statuses.
+    """
+    document = AnnotationStatus
+
+
+class DocumentView(View):
+    """
+    Baseview for detail views.
+    
+    Subclasses must set form and document attributes.
+    """
+    def get(self, request, pk):
+        """Read a document."""
+        obj_dict = self.document.objects.get(pk=pk).get_dict(ref_urls=False)
+        return unwrap_datetime(obj_dict)
+
+    def post(self,request, pk):
+        """Update a document."""
+        self.document(pk=pk, **self.CONTENT).save()
+        return Response(status.HTTP_200_OK)
+
+    def delete(self,request, pk):
+        """Delete a document."""
+        self.document.objects.get(pk=pk).delete()
+        return Response(status.HTTP_200_OK)
+
+    def put(self,request, pk=None):
+        """Create a document."""
+        self.document(**self.CONTENT).save()
+        return Response(status.HTTP_200_OK)
+
+
+class AnnotationView(DocumentView):
+    """
+    Edit annotation details.
+    """
+    document = Annotation
     form = AnnotationForm
 
-    def get(self, request, pk):
-        result = {}
-        a = Annotation.objects.get(pk=pk)
-        obj = dict([(k, a[k]) for k in a])
-        obj_unwrapped = unwrap_datetime(obj)
-        return obj_unwrapped
 
-    def post(self, request, pk=None):
-        Annotation(**self.CONTENT).save()
-        
-        response = Response(status.HTTP_200_OK)
-        return self.render(response) 
-
-
-class AnnotationStatusView(View):
-    def get(self, request, pk):
-        return AnnotationStatus.objects.get(pk=pk)
-
-
-class AnnotationStatusRootView(View):
+class AnnotationTypeView(DocumentView):
     """
-    Complete list of all annotation statuses.
+    Edit annotation type details.
     """
-    def get(self, request):
-        """
-        Return annotationstatus list.
-        """
-        return {
-            'statuses': [
-                {
-                    'status': status.status,
-                    'url': status.get_absolute_url(),
-                }
-                for status in AnnotationStatus.objects.all()],
-        }
+    document = AnnotationType
+    form = TypeForm
 
 
-class AnnotationCategoryView(View):
-    def get(self, request, pk):
-        return AnnotationCategory.objects.get(pk=pk)
-
-
-class AnnotationCategoryRootView(View):
+class AnnotationCategoryView(DocumentView):
     """
-    Complete list of all annotation categories.
+    Edit annotation category details.
     """
-    def get(self, request):
-        """
-        Return annotationcategory list.
-        """
-        return {
-            'categories': [
-                {
-                    'category': category.category,
-                    'url': category.get_absolute_url(),
-                }
-                for category in AnnotationCategory.objects.all()],
-        }
+    document = AnnotationCategory
+    form = CategoryForm
 
 
-class AnnotationTypeView(View):
-    def get(self, request, pk):
-        return AnnotationType.objects.get(pk=pk)
-
-
-class AnnotationTypeRootView(View):
+class AnnotationStatusView(DocumentView):
     """
-    Complete list of all annotation types.
+    Edit annotation status details.
     """
-    def get(self, request):
-        """
-        Return annotationtype list.
-        """
-        return {
-            'types': [
-                {
-                    'type': type.annotation_type,
-                    'url': type.get_absolute_url(),
-                }
-                for type in AnnotationType.objects.all()],
-        }
+    document = AnnotationStatus
+    form = StatusForm
+
+

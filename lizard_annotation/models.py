@@ -5,6 +5,29 @@ import mongoengine
 from django.core.urlresolvers import reverse
 
 
+class GetDictMixin(object):
+    """
+    Provides a get_dict() method.
+    """
+    def get_dict(self, url=False, ref_urls=False):
+        """
+        Return the fields and their contents as a dict.
+
+        If url=True, add own absolute url, if ref_urls=True, add urls for any
+        referencefields present.
+        """
+        result = dict([(key, self[key]) for key in self])
+        if url:
+            result.update(url=self.get_absolute_url)
+        if ref_urls:
+            result.update([
+                (key + '_url', self[key].get_absolute_url())
+                for key in self
+                if isinstance(self[key],mongoengine.Document)
+            ])
+        return result
+
+
 class ReferenceObject(mongoengine.EmbeddedDocument):
 
     reference_id = mongoengine.IntField()
@@ -16,7 +39,7 @@ class ReferenceObject(mongoengine.EmbeddedDocument):
         return self.reference_filter
 
 
-class AnnotationType(mongoengine.Document):
+class AnnotationType(mongoengine.Document, GetDictMixin):
 
     annotation_type = mongoengine.StringField()
 
@@ -27,7 +50,7 @@ class AnnotationType(mongoengine.Document):
         return reverse('lizard_annotation_api_type', kwargs={'pk': self.pk})
 
 
-class AnnotationCategory(mongoengine.Document):
+class AnnotationCategory(mongoengine.Document, GetDictMixin):
 
     category = mongoengine.StringField()
     annotation_type = mongoengine.ReferenceField(AnnotationType)
@@ -42,7 +65,7 @@ class AnnotationCategory(mongoengine.Document):
         )
 
 
-class AnnotationStatus(mongoengine.Document):
+class AnnotationStatus(mongoengine.Document, GetDictMixin):
 
     status = mongoengine.StringField()
     annotation_type = mongoengine.ReferenceField(AnnotationType)
@@ -54,7 +77,7 @@ class AnnotationStatus(mongoengine.Document):
         return reverse('lizard_annotation_api_status', kwargs={'pk': self.pk})
 
 
-class Annotation(mongoengine.Document):
+class Annotation(mongoengine.Document, GetDictMixin):
     """
     reference_object field expects a dict. object
     like {"Gebied100": RelatedObject,}.

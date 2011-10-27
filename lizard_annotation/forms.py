@@ -18,6 +18,13 @@ annotation_type_choices = [(ans.annotation_type, ans.annotation_type)
                            for ans in AnnotationType.objects.all()]
 
 
+def _clean_annotation_type(form_object):
+    """Return the Annotationtype object."""
+    annotation_type = form_object.cleaned_data['annotation_type']
+    obj = AnnotationType.objects.get(annotation_type=annotation_type)
+    return obj
+
+
 class AnnotationForm(forms.Form):
     """Form for editing of annotations."""
     title = forms.CharField(
@@ -58,13 +65,6 @@ class AnnotationForm(forms.Form):
         choices=annotation_type_choices,
     )
 
-    #reference_objects = mongoengine.DictField()
-    # Journaling
-    #date_created = mongoengine.DateTimeField()
-    #created_by = mongoengine.StringField()
-    #date_modified = mongoengine.DateTimeField()
-    #modified_by = mongoengine.StringField()
-
     def clean_status(self):
         """Return the Status object."""
         status = self.cleaned_data['status']
@@ -77,11 +77,40 @@ class AnnotationForm(forms.Form):
         obj = AnnotationCategory.objects.get(category=category)
         return obj
 
-    def clean_annotation_type(self):
-        """Return the Annotationtype object."""
-        annotation_type = self.cleaned_data['annotation_type']
-        obj = AnnotationType.objects.get(annotation_type=annotation_type)
-        return obj
+    clean_annotation_type = _clean_annotation_type
 
     def clean(self):
         return wrap_datetime(self.cleaned_data)
+
+
+class StatusForm(forms.Form):
+    """Form for editing of statuses."""
+    status = forms.CharField(
+        label=ugettext(u'Annotation status'),
+    )
+    annotation_type = forms.ChoiceField(
+        label=ugettext(u'Annotation type'),
+        choices=annotation_type_choices,
+    )
+
+    clean_annotation_type = _clean_annotation_type
+
+
+class CategoryForm(forms.Form):
+    """Form for editing of categories."""
+    category = forms.CharField(
+        label=ugettext(u'Annotation category'),
+    )
+    annotation_type = forms.ChoiceField(
+        label=ugettext(u'Annotation type'),
+        choices=annotation_type_choices,
+    )
+
+    clean_annotation_type = _clean_annotation_type
+
+
+class TypeForm(forms.Form):
+    """Form for editing of types."""
+    annotation_type = forms.CharField(
+        label=ugettext(u'Annotation type'),
+    )
