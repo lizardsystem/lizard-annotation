@@ -23,8 +23,7 @@ class GetDictMixin(object):
             result.update([
                 (key + '_url', self[key].get_absolute_url())
                 for key in self
-                if isinstance(self[key],mongoengine.Document)
-            ])
+                if isinstance(self[key], mongoengine.Document)])
         return result
 
 

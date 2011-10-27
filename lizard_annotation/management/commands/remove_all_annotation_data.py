@@ -17,4 +17,3 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         remove_all_data()
-

@@ -115,38 +115,50 @@ def insert_dummy_annotations():
     obj_b.reference_filter = '%s%d' % (obj_b.reference_model,
                                        obj_b.reference_id)
 
-    annotations = [
-        {
-            'title': 'Licht doorlatenheid en milieu vriendelijke oevers',
-            'description': '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosq.''', 'status': AnnotationStatus.objects.filter(**{
-                    'status': 'In bewerking'})[0],
-            'annotation_type': AnnotationType.objects.filter(**{
-                    'annotation_type': 'interpretatie'})[0],
-            'category':  AnnotationCategory.objects.filter(**{
-                    'category': 'Ecologie'})[0],
-            'created_by': 'Alexandr',
-            'date_created': datetime.today(),
-            'datetime_period_start': datetime.today() + timedelta(days=-3),
-            'datetime_period_end': None,
-            'reference_objects': {
-                obj_a.reference_filter: obj_a,
-                obj_b.reference_filter: obj_b},
-        },
-        {
-            'title': 'Kroos',
-            'description': '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosq.''', 'status': AnnotationStatus.objects.filter(**{
-                    'status': 'Concept'})[0],
-            'annotation_type': AnnotationType.objects.filter(**{
-                    'annotation_type': 'interpretatie'})[0],
-            'category':  AnnotationCategory.objects.filter(**{
-                    'category': 'onderzoek Kwantiteit'})[0],
-            'created_by': 'Alexandr',
-            'date_created': datetime.today(),
-            'datetime_period_start': datetime.today(),
-            'datetime_period_end': datetime.today() + timedelta(days=7),
-            'reference_objects': {obj_a.reference_filter: obj_a},
-       },
-    ]
+    annotations = [{
+        'title': 'Licht doorlatenheid en milieu vriendelijke oevers',
+        'description': (
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer'
+            'nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed'
+            'nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis'
+            'ipsum. Praesent mauris. Fusce nec tellus sed augue semper'
+            'porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class'
+            'aptent taciti sociosq.'),
+        'status': AnnotationStatus.objects.get(
+            status='In bewerking'),
+        'annotation_type': AnnotationType.objects.get(
+            annotation_type='interpretatie'),
+        'category': AnnotationCategory.objects.get(
+            category='Ecologie'),
+        'created_by': 'Alexandr',
+        'datetime_created': datetime.today(),
+        'datetime_period_start': datetime.today() + timedelta(days=-3),
+        'datetime_period_end': None,
+        'reference_objects': {
+            obj_a.reference_filter: obj_a,
+            obj_b.reference_filter: obj_b},
+    },
+    {
+        'title': 'Kroos',
+        'description': (
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer'
+            'nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed'
+            'nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis'
+            'ipsum. Praesent mauris. Fusce nec tellus sed augue semper'
+            'porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class'
+            'aptent taciti sociosq.'),
+        'status': AnnotationStatus.objects.get(
+            status='Concept'),
+        'annotation_type': AnnotationType.objects.get(
+            annotation_type='interpretatie'),
+        'category': AnnotationCategory.objects.get(
+            category='onderzoek Kwantiteit'),
+        'created_by': 'Alexandr',
+        'datetime_created': datetime.today(),
+        'datetime_period_start': datetime.today(),
+        'datetime_period_end': datetime.today() + timedelta(days=7),
+        'reference_objects': {obj_a.reference_filter: obj_a},
+   }]
 
     for item in annotations:
         annotation = Annotation(**item)

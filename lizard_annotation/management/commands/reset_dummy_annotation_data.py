@@ -19,4 +19,3 @@ class Command(BaseCommand):
 
         remove_all_data()
         insert_dummy_data()
-

@@ -1,5 +1,4 @@
 from django import forms
-from django.forms.extras import widgets
 from django.utils.translation import ugettext
 
 from models import AnnotationStatus
@@ -52,6 +51,7 @@ class AnnotationForm(forms.Form):
         label=ugettext('End time of period'),
         widget=forms.TimeInput,
     )
+    # References
     status = forms.ChoiceField(
         label=ugettext(u'Status'),
         choices=annotation_status_choices,
@@ -63,6 +63,33 @@ class AnnotationForm(forms.Form):
     annotation_type = forms.ChoiceField(
         label=ugettext(u'Annotation type'),
         choices=annotation_type_choices,
+    )
+    # TODO Something with the objects, workspaces, etc.
+    # Journaling
+    created_by = forms.CharField(
+        label=ugettext(u'Created by'),
+    )
+    date_created = forms.DateField(
+        label=ugettext('Date created'),
+        widget=forms.DateInput,
+    )
+    time_created = forms.TimeField(
+        label=ugettext('Time created'),
+        widget=forms.TimeInput,
+    )
+    modified_by = forms.CharField(
+        required=False,
+        label=ugettext(u'Modified by'),
+    )
+    date_modified = forms.DateField(
+        required=False,
+        label=ugettext('Date modified'),
+        widget=forms.DateInput,
+    )
+    time_modified = forms.TimeField(
+        required=False,
+        label=ugettext('Time modified'),
+        widget=forms.TimeInput,
     )
 
     def clean_status(self):

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-27 07:37-0500\n"
+"POT-Creation-Date: 2011-10-27 08:24-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,27 +18,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: forms.py:31
+#: forms.py:30
 msgid "Title"
 msgstr "Titel"
 
-#: forms.py:34
+#: forms.py:33
 msgid "Description"
 msgstr "Omschrijving"
 
-#: forms.py:38
+#: forms.py:37
 msgid "Start date of period"
 msgstr "Datum begin periode"
 
-#: forms.py:42
+#: forms.py:41
 msgid "Start time of period"
 msgstr "Tijd begin periode"
 
-#: forms.py:47
+#: forms.py:46
 msgid "End date of period"
 msgstr "Datum einde periode"
 
-#: forms.py:52
+#: forms.py:51
 msgid "End time of period"
 msgstr "Tijd einde periode"
 
@@ -50,16 +50,40 @@ msgstr "Status"
 msgid "Category"
 msgstr "Categorie"
 
-#: forms.py:64 forms.py:92 forms.py:105 forms.py:115
+#: forms.py:64 forms.py:119 forms.py:132 forms.py:142
 msgid "Annotation type"
 msgstr "Type annotatie"
 
-#: forms.py:89
+#: forms.py:70
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#: forms.py:73
+msgid "Date created"
+msgstr "Datum aangemaakt"
+
+#: forms.py:77
+msgid "Time created"
+msgstr "Tijd aangemaakt"
+
+#: forms.py:82
+msgid "Modified by"
+msgstr "Gewijzigd door"
+
+#: forms.py:86
+msgid "Date modified"
+msgstr "Datum gewijzigd"
+
+#: forms.py:91
+msgid "Time modified"
+msgstr "Tijd gewijzigd"
+
+#: forms.py:116
 #, fuzzy
 msgid "Annotation status"
 msgstr "Annotatie status"
 
-#: forms.py:102
+#: forms.py:129
 #, fuzzy
 msgid "Annotation category"
 msgstr "Annotatie categorie"

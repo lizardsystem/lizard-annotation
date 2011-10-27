@@ -1,12 +1,6 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
-   
-import re
-import datetime
-import mongoengine
 
-from django.http import HttpResponse
 from django.core.urlresolvers import reverse
-from django.views.generic.edit import FormMixin
 
 from djangorestframework.response import Response
 from djangorestframework.views import View
@@ -21,7 +15,6 @@ from lizard_annotation.forms import AnnotationForm
 from lizard_annotation.forms import StatusForm
 from lizard_annotation.forms import CategoryForm
 from lizard_annotation.forms import TypeForm
-from lizard_annotation import forms
 
 from lizard_annotation.api.utils import unwrap_datetime
 
@@ -58,7 +51,7 @@ class AnnotationGridView(View):
     """
     Show a (filtered) list of annotations with all annotation
     fields.
-    
+
     """
     def get(self, request):
         """
@@ -72,22 +65,20 @@ class AnnotationGridView(View):
             try:
                 type_obj = AnnotationType.objects.get(
                     annotation_type=annotation_type)
-            except DoesNotExist:
+            except AnnotationType.DoesNotExist:
                 return Response(status.HTTP_404_NOT_FOUND)
             annotations = Annotation.objects.filter(
                 annotation_type=type_obj)
         else:
             annotations = Annotation.objects.all()
+        return {'annotations': [a.get_dict()
+                                for a in annotations()]}
 
-        return {'annotations': [
-            a.get_dict(url=True, ref_urls=True)
-            for a in annotations()
-        ]}
 
 class DocumentRootView(View):
     """
     Baseview for root views.
-    
+
     Subclasses must set the document attribute.
     """
     def get(self, request):
@@ -97,7 +88,7 @@ class DocumentRootView(View):
         """
         return [[d, d.get_absolute_url()]
                 for d in self.document.objects.all()]
-    
+
 
 class AnnotationRootView(DocumentRootView):
     """
@@ -130,25 +121,25 @@ class AnnotationStatusRootView(DocumentRootView):
 class DocumentView(View):
     """
     Baseview for detail views.
-    
+
     Subclasses must set form and document attributes.
     """
     def get(self, request, pk):
         """Read a document."""
-        obj_dict = self.document.objects.get(pk=pk).get_dict(ref_urls=False)
+        obj_dict = self.document.objects.get(pk=pk).get_dict(ref_urls=True)
         return unwrap_datetime(obj_dict)
 
-    def post(self,request, pk):
+    def post(self, request, pk):
         """Update a document."""
         self.document(pk=pk, **self.CONTENT).save()
         return Response(status.HTTP_200_OK)
 
-    def delete(self,request, pk):
+    def delete(self, request, pk):
         """Delete a document."""
         self.document.objects.get(pk=pk).delete()
         return Response(status.HTTP_200_OK)
 
-    def put(self,request, pk=None):
+    def put(self, request, pk=None):
         """Create a document."""
         self.document(**self.CONTENT).save()
         return Response(status.HTTP_200_OK)
@@ -184,5 +175,3 @@ class AnnotationStatusView(DocumentView):
     """
     document = AnnotationStatus
     form = StatusForm
-
-

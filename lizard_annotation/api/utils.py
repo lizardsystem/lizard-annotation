@@ -3,6 +3,7 @@
 import datetime
 import re
 
+
 def unwrap_datetime(obj):
     """ Return an obj with datetime_-key split into date_-and time_-keys. """
     result = {}
@@ -19,7 +20,7 @@ def unwrap_datetime(obj):
                 re.sub('^datetime', 'time', k): None,
 
             })
-    
+
         else:
             result.update({k: v})
     return result
