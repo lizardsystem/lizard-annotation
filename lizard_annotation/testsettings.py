@@ -29,8 +29,8 @@ DATABASES = {
     # the specified database exists. When the tests cannot run, Jenkins sees
     # that as an error.
     'default': {
-        'NAME': 'annotation',
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'lizard-annotation.db',
+        'ENGINE': 'django.db.backends.sqlite3',
         'USER': 'buildout',
         'PASSWORD': 'buildout',
         'HOST': '127.0.0.1',  # empty string for localhost.
