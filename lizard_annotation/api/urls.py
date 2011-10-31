@@ -3,16 +3,16 @@ from django.conf.urls.defaults import patterns
 from django.conf.urls.defaults import url
 from django.contrib import admin
 
-from lizard_annotation.api.views import RootView
-from lizard_annotation.api.views import AnnotationGridView
-from lizard_annotation.api.views import AnnotationRootView
-from lizard_annotation.api.views import AnnotationView
-from lizard_annotation.api.views import AnnotationStatusRootView
-from lizard_annotation.api.views import AnnotationStatusView
 from lizard_annotation.api.views import AnnotationCategoryRootView
 from lizard_annotation.api.views import AnnotationCategoryView
+from lizard_annotation.api.views import AnnotationGridView
+from lizard_annotation.api.views import AnnotationRootView
+from lizard_annotation.api.views import AnnotationStatusRootView
+from lizard_annotation.api.views import AnnotationStatusView
 from lizard_annotation.api.views import AnnotationTypeRootView
 from lizard_annotation.api.views import AnnotationTypeView
+from lizard_annotation.api.views import AnnotationView
+from lizard_annotation.api.views import RootView
 
 admin.autodiscover()
 

@@ -14,7 +14,7 @@ annotation as user buildout::
   > use admin
   > db.addUser('[ADMIN_NAME]','[ADMIN_PASSWORD]')
   > db.auth('[ADMIN_NAME]','[ADMIN_PASSWORD]')
-  > use 'annotation'
+  > use annotation
   > db.addUser('buildout','buildout')
 
 Of course, creating a test postgis database is necessary as well, but since the
