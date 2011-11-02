@@ -1,4 +1,7 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
+"""
+API views not coupled to models.
+"""
 
 from django.core.urlresolvers import reverse
 

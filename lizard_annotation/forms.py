@@ -1,9 +1,11 @@
+# (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
+
 from django import forms
 from django.utils.translation import ugettext
 
-from models import AnnotationStatus
-from models import AnnotationCategory
-from models import AnnotationType
+from lizard_annotation.models import AnnotationStatus
+from lizard_annotation.models import AnnotationCategory
+from lizard_annotation.models import AnnotationType
 
 from lizard_annotation.api.utils import wrap_datetime
 
