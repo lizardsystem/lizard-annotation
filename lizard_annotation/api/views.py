@@ -52,6 +52,9 @@ class AnnotationGridView(View):
     Show a (filtered) list of annotations with all annotation
     fields.
 
+    Possible filters are:
+
+    - annotation_type
     """
     def get(self, request):
         """
@@ -129,7 +132,7 @@ class DocumentView(View):
         obj_dict = self.document.objects.get(pk=pk).get_dict(ref_urls=True)
         return unwrap_datetime(obj_dict)
 
-    def post(self, request, pk):
+    def put(self, request, pk):
         """Update a document."""
         self.document(pk=pk, **self.CONTENT).save()
         return Response(status.HTTP_200_OK)
@@ -139,7 +142,7 @@ class DocumentView(View):
         self.document.objects.get(pk=pk).delete()
         return Response(status.HTTP_200_OK)
 
-    def put(self, request, pk=None):
+    def post(self, request, pk=None):
         """Create a document."""
         self.document(**self.CONTENT).save()
         return Response(status.HTTP_200_OK)
