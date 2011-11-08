@@ -51,7 +51,6 @@ mongoengine.connect('annotation', **MONGODB_SETTINGS)
 SITE_ID = 1
 INSTALLED_APPS = [
     'lizard_ui',
-    'lizard_fewsnorm'
     'staticfiles',
     'compressor',
     'south',
