@@ -24,10 +24,14 @@ class GetDictMixin(object):
                 (key + '_url', self[key].get_absolute_url())
                 for key in self
                 if isinstance(self[key], mongoengine.Document)])
+        reference_objects = result.get('reference_objects')
+        if reference_objects:
+            for k in reference_objects:
+                reference_objects[k] = reference_objects[k].get_dict()
         return result
 
 
-class ReferenceObject(mongoengine.EmbeddedDocument):
+class ReferenceObject(mongoengine.EmbeddedDocument, GetDictMixin):
 
     reference_id = mongoengine.IntField()
     reference_model = mongoengine.StringField()

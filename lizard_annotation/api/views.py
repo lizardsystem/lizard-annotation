@@ -133,7 +133,10 @@ class DocumentView(View):
     def get(self, request, pk):
         """Read a document."""
         obj_dict = self.document.objects.get(pk=pk).get_dict(ref_urls=True)
-        return {'objects': [unwrap_datetime(obj_dict)]}
+        
+        if request.GET.get('enclosed') == 'true':
+            return {'objects': [unwrap_datetime(obj_dict)]}
+        return unwrap_datetime(obj_dict)
 
     def put(self, request, pk):
         """Update a document."""
@@ -154,6 +157,9 @@ class DocumentView(View):
 class AnnotationView(DocumentView):
     """
     Edit annotation details.
+
+    Supply 'enclosed=true' as get parameter to enclose it in a root
+    dict. Note that doing so breaks the prefilled forms.
     """
     document = Annotation
     form = AnnotationForm

@@ -136,7 +136,8 @@ def insert_dummy_annotations():
         'datetime_period_end': None,
         'reference_objects': {
             obj_a.reference_filter: obj_a,
-            obj_b.reference_filter: obj_b},
+            obj_b.reference_filter: obj_b,
+        },
     },
     {
         'title': 'Kroos',

@@ -2,10 +2,12 @@
 
 from django import forms
 from django.utils.translation import ugettext
+from django.utils import simplejson
 
 from lizard_annotation.models import AnnotationStatus
 from lizard_annotation.models import AnnotationCategory
 from lizard_annotation.models import AnnotationType
+from lizard_annotation.models import ReferenceObject
 
 from lizard_annotation.api.utils import wrap_datetime
 
@@ -27,7 +29,15 @@ def _clean_annotation_type(form_object):
 
 
 class AnnotationForm(forms.Form):
-    """Form for editing of annotations."""
+    """
+    Form for editing of annotations.
+
+    Take notion of how djangorestframework handles this form: If the
+    form validates, the data (and not the cleaned_data) is displayed in
+    the form on the api page. So the clean methods are called, to see
+    if there are any errors, but the original data is used.
+    """
+
     title = forms.CharField(
         label=ugettext(u'Title'),
     )
@@ -65,6 +75,10 @@ class AnnotationForm(forms.Form):
     annotation_type = forms.ChoiceField(
         label=ugettext(u'Annotation type'),
         choices=annotation_type_choices,
+    )
+    reference_objects = forms.CharField(
+        label=ugettext(u'Reference objects'),
+        widget=forms.Textarea,
     )
     # TODO Something with the objects, workspaces, etc.
     # Journaling
@@ -106,9 +120,41 @@ class AnnotationForm(forms.Form):
         obj = AnnotationCategory.objects.get(category=category)
         return obj
 
+    def clean_reference_objects(self):
+        """
+        Toggle json / python object
+
+        Since cleaning is used both ways, we do conversion to json and
+        back here. So if the reference objects are already a JSON string,
+        convert it
+
+        data should always be a json, so if it is not (when resulting
+        from a get), convert it. What is returned should always be a
+        python object, and it should be a dict of embedded documents,
+        too, otherwise the get_dict fails.
+        """
+        if isinstance(self.data['reference_objects'], dict):
+            self.data['reference_objects'] = simplejson.dumps(
+                self.data['reference_objects'],
+            )
+
+        data = self.cleaned_data['reference_objects']
+        if isinstance(data, unicode):
+            data = simplejson.loads(data)
+            for k in data:
+                data[k] = ReferenceObject(**data[k])
+            
+
+        return data
+
     clean_annotation_type = _clean_annotation_type
 
     def clean(self):
+        """
+        Should do the wrapping and unwrapping of datetimefields here as
+        well: Cleaned_data should map to the model, data should map to
+        the form."""
+
         return wrap_datetime(self.cleaned_data)
 
 
