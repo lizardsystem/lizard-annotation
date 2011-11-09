@@ -133,7 +133,7 @@ class DocumentView(View):
     def get(self, request, pk):
         """Read a document."""
         obj_dict = self.document.objects.get(pk=pk).get_dict(ref_urls=True)
-        return unwrap_datetime(obj_dict)
+        return {'objects': [unwrap_datetime(obj_dict)]}
 
     def put(self, request, pk):
         """Update a document."""
