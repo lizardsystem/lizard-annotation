@@ -13,6 +13,7 @@ install_requires = [
     'Django',
     'django-extensions',
     'django-nose',
+    'django-load',
     'lizard-ui >= 3.0',
     'pkginfo',
     'pymongo',
