@@ -133,18 +133,22 @@ class AnnotationForm(forms.Form):
         python object, and it should be a dict of embedded documents,
         too, otherwise the get_dict fails.
         """
-        if isinstance(self.data['reference_objects'], dict):
-            self.data['reference_objects'] = simplejson.dumps(
-                self.data['reference_objects'],
-            )
+        import logging; logger = logging.getLogger(__name__);logger.debug('hey')
 
-        data = self.cleaned_data['reference_objects']
-        if isinstance(data, unicode):
-            data = simplejson.loads(data)
-            for k in data:
-                data[k] = ReferenceObject(**data[k])
-            
+        data = self.data['reference_objects']
 
+        if isinstance(data, dict):
+            # This comes from the get() method on our view and self.data
+            # will be used to popuplate the form. So make it a nice JSON
+            # string.
+            self.data['reference_objects'] = simplejson.dumps(data)
+            return None
+
+        # We received a JSON string from the server and should coerce it
+        # into a appropriate object reference_objects model
+        data = simplejson.loads(data)
+        for k in data:
+            data[k] = ReferenceObject(**data[k])
         return data
 
     clean_annotation_type = _clean_annotation_type
