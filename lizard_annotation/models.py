@@ -33,7 +33,7 @@ class GetDictMixin(object):
 
 class ReferenceObject(mongoengine.EmbeddedDocument, GetDictMixin):
 
-    reference_id = mongoengine.IntField()
+    reference_id = mongoengine.StringField()
     reference_model = mongoengine.StringField()
     reference_name = mongoengine.StringField()
     reference_filter = mongoengine.StringField()

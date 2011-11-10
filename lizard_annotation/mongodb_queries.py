@@ -102,17 +102,17 @@ def insert_dummy_annotationstatuses():
 def insert_dummy_annotations():
 
     obj_a = ReferenceObject()
-    obj_a.reference_id = 100
-    obj_a.reference_model = 'Gebied'
+    obj_a.reference_id = '151'
+    obj_a.reference_model = 'lizard_area.models.Area'
     obj_a.reference_name = 'Aan-afvoergebied A'
-    obj_a.reference_filter = '%s%d' % (obj_a.reference_model,
+    obj_a.reference_filter = '%s:%s' % (obj_a.reference_model.replace('.','_'),
                                        obj_a.reference_id)
 
     obj_b = ReferenceObject()
-    obj_b.reference_id = 200
-    obj_b.reference_model = 'Gebied'
+    obj_b.reference_id = '152'
+    obj_b.reference_model = 'lizard_area.models.Area'
     obj_b.reference_name = 'Aan-afvoergebied B'
-    obj_b.reference_filter = '%s%d' % (obj_b.reference_model,
+    obj_b.reference_filter = '%s:%s' % (obj_b.reference_model.replace('.','_'),
                                        obj_b.reference_id)
 
     annotations = [{

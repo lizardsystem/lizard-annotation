@@ -3,6 +3,7 @@
 from django import forms
 from django.utils.translation import ugettext
 from django.utils import simplejson
+from django_load.core import load_object
 
 from lizard_annotation.models import AnnotationStatus
 from lizard_annotation.models import AnnotationCategory
@@ -122,43 +123,56 @@ class AnnotationForm(forms.Form):
 
     def clean_reference_objects(self):
         """
-        Toggle json / python object
+        Coerce eference_objects from JSON to python and vice versa.
 
-        Since cleaning is used both ways, we do conversion to json and
-        back here. So if the reference objects are already a JSON string,
-        convert it
-
-        data should always be a json, so if it is not (when resulting
-        from a get), convert it. What is returned should always be a
-        python object, and it should be a dict of embedded documents,
-        too, otherwise the get_dict fails.
+        Vice versa, because form cleaning is invoked both for displaying
+        a form in the html representation of the api, and for cleaning
+        posted content by the form. In the first case it should be
+        converted to JSON, in the latter case to python, including
+        instantiating each reference object, verifying its existence
+        and filling in its filter and unicode.
         """
-        import logging; logger = logging.getLogger(__name__);logger.debug('hey')
-
-        data = self.data['reference_objects']
-
-        if isinstance(data, dict):
-            # This comes from the get() method on our view and self.data
-            # will be used to popuplate the form. So make it a nice JSON
-            # string.
-            self.data['reference_objects'] = simplejson.dumps(data)
-            return None
-
-        # We received a JSON string from the server and should coerce it
-        # into a appropriate object reference_objects model
-        data = simplejson.loads(data)
-        for k in data:
-            data[k] = ReferenceObject(**data[k])
-        return data
+        import logging; logger = logging.getLogger(__name__) 
+        if isinstance(self.data['reference_objects'], dict):
+            # This is the case when the form data comes really from
+            # the client. Yes, restframework does this to prepopulate the
+            # forms in html representation.
+            self.data['reference_objects'] = simplejson.dumps(
+                self.data['reference_objects'],
+            )
+        
+        if isinstance(self.data['reference_objects'], unicode):
+            # This is the case when the form
+            # data comes really from the client.
+            ref_dict = simplejson.loads(self.data['reference_objects'])
+            ref_objs = {}
+            for r_old in ref_dict.values():
+                r_new = ReferenceObject()
+                r_new.reference_model = r_old['reference_model']
+                r_new.reference_id = r_old['reference_id']
+                try:
+                    model = load_object(r_new.reference_model)
+                except:
+                    raise forms.ValidationError('Reference model not found')
+                try:
+                    reference_object = model.objects.get(pk=r_new.reference_id)
+                except:
+                    raise forms.ValidationError('Reference object not found')
+                # Use its name and reconstruct the filter
+                import pdb; pdb.set_trace() 
+                r_new.reference_name = unicode(reference_object)
+                r_new.reference_filter = (
+                    r_new.reference_model.replace('.','_') + 
+                    ':' + r_new.reference_id)
+                ref_objs[r_new.reference_filter] = r_new
+            return ref_objs
 
     clean_annotation_type = _clean_annotation_type
 
     def clean(self):
         """
-        Should do the wrapping and unwrapping of datetimefields here as
-        well: Cleaned_data should map to the model, data should map to
-        the form."""
-
+        Wrap or unwrap datetime objects in the data.
+        """
         return wrap_datetime(self.cleaned_data)
 
 
