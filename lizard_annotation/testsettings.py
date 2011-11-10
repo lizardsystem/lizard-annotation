@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'compressor',
     'south',
     'django_nose',
+    'django_load',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
