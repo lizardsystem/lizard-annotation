@@ -128,7 +128,7 @@ class DocumentView(View):
     """
     def get(self, request, pk):
         """Read a document."""
-        if request.GET.get('_property') == 'true':
+        if request.GET.get('_format') == 'property':
             fields = request.GET.get('_fields')
             if fields:
                 properties = fields.split(',')
@@ -156,7 +156,7 @@ class AnnotationView(DocumentView):
     """
     Edit annotation details.
 
-    Supply '_property=true' as get parameter to return a property,
+    Supply '_format=property' as get parameter to return a property,
     value list. Note that doing so breaks the prefilled forms. To get
     only a selection of fields supply a comma-separated list of the
     form '_fields=property1,property2'.
