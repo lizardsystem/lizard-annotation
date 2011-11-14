@@ -19,10 +19,6 @@ from lizard_annotation.forms import StatusForm
 from lizard_annotation.forms import CategoryForm
 from lizard_annotation.forms import TypeForm
 
-from lizard_annotation.api.utils import unwrap_datetime
-
-import logging
-logger = logging.getLogger(__name__)
 
 """
 Beware that the djangorestframework trips if you name an attribute of
@@ -143,7 +139,7 @@ class DocumentView(View):
             return {'properties': property_list}
 
         obj_dict = self.document.objects.get(pk=pk).get_dict(ref_urls=True)
-        return unwrap_datetime(obj_dict)
+        return obj_dict
 
     def put(self, request, pk):
         """Update a document."""

@@ -11,6 +11,7 @@ from lizard_annotation.models import AnnotationType
 from lizard_annotation.models import ReferenceObject
 
 from lizard_annotation.api.utils import wrap_datetime
+from lizard_annotation.api.utils import unwrap_datetime
 
 annotation_status_choices = [(ans.status, ans.status)
                              for ans in AnnotationStatus.objects.all()]
@@ -47,10 +48,12 @@ class AnnotationForm(forms.Form):
         widget=forms.Textarea,
     )
     date_period_start = forms.DateField(
+        required=False,
         label=ugettext('Start date of period'),
         widget=forms.DateInput,
     )
     time_period_start = forms.TimeField(
+        required=False,
         label=ugettext('Start time of period'),
         widget=forms.TimeInput,
     )
@@ -87,10 +90,12 @@ class AnnotationForm(forms.Form):
         label=ugettext(u'Created by'),
     )
     date_created = forms.DateField(
+        required=False,
         label=ugettext('Date created'),
         widget=forms.DateInput,
     )
     time_created = forms.TimeField(
+        required=False,
         label=ugettext('Time created'),
         widget=forms.TimeInput,
     )
@@ -132,7 +137,6 @@ class AnnotationForm(forms.Form):
         instantiating each reference object, verifying its existence
         and filling in its filter and unicode.
         """
-        import logging; logger = logging.getLogger(__name__) 
         if isinstance(self.data['reference_objects'], dict):
             # This is the case when the form data comes really from
             # the client. Yes, restframework does this to prepopulate the
@@ -159,7 +163,6 @@ class AnnotationForm(forms.Form):
                 except:
                     raise forms.ValidationError('Reference object not found')
                 # Use its name and reconstruct the filter
-                import pdb; pdb.set_trace() 
                 r_new.reference_name = unicode(reference_object)
                 r_new.reference_filter = (
                     r_new.reference_model.replace('.','_') + 
@@ -173,6 +176,10 @@ class AnnotationForm(forms.Form):
         """
         Wrap or unwrap datetime objects in the data.
         """
+        # Although only necessary when GETting, always unwrap because
+        # detecting the method is not trivial here.
+        self.data = unwrap_datetime(self.data)
+        # The return value is only used when POSTing.
         return wrap_datetime(self.cleaned_data)
 
 
