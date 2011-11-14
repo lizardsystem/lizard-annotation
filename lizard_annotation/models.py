@@ -5,9 +5,9 @@ import mongoengine
 from django.core.urlresolvers import reverse
 
 
-class GetDictMixin(object):
+class GettersMixin(object):
     """
-    Provides a get_dict() method.
+    Provides a get_dict() method and a get_property_list method()
     """
     def get_dict(self, url=False, ref_urls=False):
         """
@@ -30,8 +30,20 @@ class GetDictMixin(object):
                 reference_objects[k] = reference_objects[k].get_dict()
         return result
 
+    def get_property_list(self, properties=None):
+        obj_dict = self.get_dict()
+        if properties is None:
+            properties = obj_dict.keys()
+        property_list = []
+        for p in properties:
+            property_list.append({
+                'property': p,
+                'value': obj_dict[p],
+            })
+        return property_list
 
-class ReferenceObject(mongoengine.EmbeddedDocument, GetDictMixin):
+
+class ReferenceObject(mongoengine.EmbeddedDocument, GettersMixin):
 
     reference_id = mongoengine.StringField()
     reference_model = mongoengine.StringField()
@@ -42,7 +54,7 @@ class ReferenceObject(mongoengine.EmbeddedDocument, GetDictMixin):
         return self.reference_filter
 
 
-class AnnotationType(mongoengine.Document, GetDictMixin):
+class AnnotationType(mongoengine.Document, GettersMixin):
 
     annotation_type = mongoengine.StringField()
 
@@ -53,7 +65,7 @@ class AnnotationType(mongoengine.Document, GetDictMixin):
         return reverse('lizard_annotation_api_type', kwargs={'pk': self.pk})
 
 
-class AnnotationCategory(mongoengine.Document, GetDictMixin):
+class AnnotationCategory(mongoengine.Document, GettersMixin):
 
     category = mongoengine.StringField()
     annotation_type = mongoengine.ReferenceField(AnnotationType)
@@ -68,7 +80,7 @@ class AnnotationCategory(mongoengine.Document, GetDictMixin):
         )
 
 
-class AnnotationStatus(mongoengine.Document, GetDictMixin):
+class AnnotationStatus(mongoengine.Document, GettersMixin):
 
     status = mongoengine.StringField()
     annotation_type = mongoengine.ReferenceField(AnnotationType)
@@ -80,7 +92,7 @@ class AnnotationStatus(mongoengine.Document, GetDictMixin):
         return reverse('lizard_annotation_api_status', kwargs={'pk': self.pk})
 
 
-class Annotation(mongoengine.Document, GetDictMixin):
+class Annotation(mongoengine.Document, GettersMixin):
     """
     reference_object field expects a dict. object
     like {"Gebied100": RelatedObject,}.

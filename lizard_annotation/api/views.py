@@ -132,10 +132,17 @@ class DocumentView(View):
     """
     def get(self, request, pk):
         """Read a document."""
+        if request.GET.get('_property') == 'true':
+            fields = request.GET.get('_fields')
+            if fields:
+                properties = fields.split(',')
+            else:
+                properties = None
+            obj = self.document.objects.get(pk=pk)
+            property_list = obj.get_property_list(properties=properties)
+            return {'properties': property_list}
+
         obj_dict = self.document.objects.get(pk=pk).get_dict(ref_urls=True)
-        
-        if request.GET.get('enclosed') == 'true':
-            return {'objects': [unwrap_datetime(obj_dict)]}
         return unwrap_datetime(obj_dict)
 
     def put(self, request, pk):
@@ -148,18 +155,15 @@ class DocumentView(View):
         self.document.objects.get(pk=pk).delete()
         return Response(status.HTTP_200_OK)
 
-    def post(self, request, pk=None):
-        """Create a document."""
-        self.document(**self.CONTENT).save()
-        return Response(status.HTTP_200_OK)
-
 
 class AnnotationView(DocumentView):
     """
     Edit annotation details.
 
-    Supply 'enclosed=true' as get parameter to enclose it in a root
-    dict. Note that doing so breaks the prefilled forms.
+    Supply '_property=true' as get parameter to return a property,
+    value list. Note that doing so breaks the prefilled forms. To get
+    only a selection of fields supply a comma-separated list of the
+    form '_fields=property1,property2'.
     """
     document = Annotation
     form = AnnotationForm
@@ -204,9 +208,6 @@ class CreateView(View):
 class AnnotationCreateView(CreateView):
     """
     Create annotation.
-
-    Supply 'enclosed=true' as get parameter to enclose it in a root
-    dict. Note that doing so breaks the prefilled forms.
     """
     document = Annotation
     form = AnnotationForm
@@ -214,7 +215,7 @@ class AnnotationCreateView(CreateView):
 
 class AnnotationTypeCreateView(CreateView):
     """
-    Edit annotation type details.
+    Create annotation type.
     """
     document = AnnotationType
     form = TypeForm
@@ -222,7 +223,7 @@ class AnnotationTypeCreateView(CreateView):
 
 class AnnotationCategoryCreateView(CreateView):
     """
-    Edit annotation category details.
+    Create annotation category.
     """
     document = AnnotationCategory
     form = CategoryForm
@@ -230,7 +231,7 @@ class AnnotationCategoryCreateView(CreateView):
 
 class AnnotationStatusCreateView(CreateView):
     """
-    Edit annotation status details.
+    Create annotation status.
     """
     document = AnnotationStatus
     form = StatusForm
