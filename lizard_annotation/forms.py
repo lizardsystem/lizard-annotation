@@ -144,7 +144,7 @@ class AnnotationForm(forms.Form):
             self.data['reference_objects'] = simplejson.dumps(
                 self.data['reference_objects'],
             )
-        
+
         if isinstance(self.data['reference_objects'], unicode):
             # This is the case when the form
             # data comes really from the client.
@@ -165,7 +165,7 @@ class AnnotationForm(forms.Form):
                 # Use its name and reconstruct the filter
                 r_new.reference_name = unicode(reference_object)
                 r_new.reference_filter = (
-                    r_new.reference_model.replace('.','_') + 
+                    r_new.reference_model.replace('.', '_') +
                     ':' + r_new.reference_id)
                 ref_objs[r_new.reference_filter] = r_new
             return ref_objs

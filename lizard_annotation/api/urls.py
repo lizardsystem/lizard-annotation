@@ -54,7 +54,7 @@ urlpatterns = patterns(
     url(r'^status/(?P<pk>[0-9a-f]+)/$',
         AnnotationStatusView.as_view(),
         name=NAME_PREFIX + 'status'),
-   
+
     url(r'^category/$',
         AnnotationCategoryRootView.as_view(),
         name=NAME_PREFIX + 'annotation_category_root'),
@@ -64,7 +64,7 @@ urlpatterns = patterns(
     url(r'^category/(?P<pk>[0-9a-f]+)/$',
         AnnotationCategoryView.as_view(),
         name=NAME_PREFIX + 'category'),
-   
+
     url(r'^type/$',
         AnnotationTypeRootView.as_view(),
         name=NAME_PREFIX + 'annotation_type_root'),
