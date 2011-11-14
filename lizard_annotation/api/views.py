@@ -187,3 +187,50 @@ class AnnotationStatusView(DocumentView):
     """
     document = AnnotationStatus
     form = StatusForm
+
+
+class CreateView(View):
+    """
+    Baseview for create views.
+
+    Subclasses must set form and document attributes.
+    """
+    def post(self, request, pk=None):
+        """Create a document."""
+        self.document(**self.CONTENT).save()
+        return Response(status.HTTP_200_OK)
+
+
+class AnnotationCreateView(CreateView):
+    """
+    Create annotation.
+
+    Supply 'enclosed=true' as get parameter to enclose it in a root
+    dict. Note that doing so breaks the prefilled forms.
+    """
+    document = Annotation
+    form = AnnotationForm
+
+
+class AnnotationTypeCreateView(CreateView):
+    """
+    Edit annotation type details.
+    """
+    document = AnnotationType
+    form = TypeForm
+
+
+class AnnotationCategoryCreateView(CreateView):
+    """
+    Edit annotation category details.
+    """
+    document = AnnotationCategory
+    form = CategoryForm
+
+
+class AnnotationStatusCreateView(CreateView):
+    """
+    Edit annotation status details.
+    """
+    document = AnnotationStatus
+    form = StatusForm
