@@ -19,8 +19,9 @@ class TransactionTest(TestCase):
         qrs.insert_dummy_data()
 
     def test_annotation_types_published_1(self):
+        annotation_types = ["type_1", "type_2"]
+        qrs.insert_dummy_annotationtypes(annotation_types)
         """ Tests inserting annotation types function with out args."""
-        qrs.insert_dummy_annotationtypes()
         self.assertNotEqual(len(m.AnnotationType.objects()), 0)
 
     def test_annotation_types_published_2(self):
@@ -32,14 +33,10 @@ class TransactionTest(TestCase):
 
     def test_annotation_statuses_published(self):
         """ Tests inserting annotation statuses."""
-        qrs.insert_dummy_annotationtypes()
-        qrs.insert_dummy_annotationstatuses()
         self.assertNotEqual(len(m.AnnotationStatus.objects()), 0)
 
     def test_annotation_categories_published(self):
         """ Tests inserting annotation categories."""
-        qrs.insert_dummy_annotationtypes()
-        qrs.insert_dummy_categories()
         self.assertNotEqual(len(m.AnnotationCategory.objects()), 0)
 
     def test_annotations_published(self):
