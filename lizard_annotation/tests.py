@@ -16,8 +16,8 @@ class TransactionTest(TestCase):
         """
         Clear the collections in the testdatabase.
         """
-        for cls in mongoengine.Document.__subclasses__():
-            cls.drop_collection()
+        qrs.remove_all_data()
+        qrs.insert_dummy_data()
 
     def test_annotation_types_published_1(self):
         """ Tests inserting annotation types function with out args."""
@@ -45,15 +45,10 @@ class TransactionTest(TestCase):
 
     def test_annotations_published(self):
         """ Tests inserting annotations."""
-        qrs.insert_dummy_annotationtypes()
-        qrs.insert_dummy_annotationstatuses()
-        qrs.insert_dummy_categories()
-        qrs.insert_dummy_annotations()
         self.assertNotEqual(len(m.Annotation.objects()), 0)
 
     def tearDown(self):
         """
         Clear the collections in the testdatabase.
         """
-        for cls in mongoengine.Document.__subclasses__():
-            cls.drop_collection()
+        qrs.remove_all_data()
