@@ -9,6 +9,15 @@ from lizard_annotation.models import ReferenceObject
 from datetime import datetime
 from datetime import timedelta
 
+SOME_LONGER_TEXT = (
+    '<p>Lorem ipsum dolor sit amet, consectetur adipiscing'
+    'elit. Integer nec odio. Praesent libero. Sed cursus ante'
+    'dapibus diam. Sed nisi. <b>Nulla</b> <i>quis</i> sem at'
+    'nibh elementum imperdiet. Duis sagittis ipsum. Praesent'
+    'mauris. Fusce nec tellus sed augue semper porta. Mauris'
+    'massa. Vestibulum lacinia arcu eget nulla. Class aptent'
+    'taciti sociosq.</p>')
+
 
 def remove_all_data():
     Annotation.objects.delete()
@@ -119,13 +128,7 @@ def insert_dummy_annotations():
 
     annotations = [{
         'title': 'Licht doorlatenheid en milieu vriendelijke oevers',
-        'description': (
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer'
-            'nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed'
-            'nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis'
-            'ipsum. Praesent mauris. Fusce nec tellus sed augue semper'
-            'porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class'
-            'aptent taciti sociosq.'),
+        'description': SOME_LONGER_TEXT,
         'status': AnnotationStatus.objects.get(
             status='In bewerking'),
         'annotation_type': AnnotationType.objects.get(
@@ -143,13 +146,7 @@ def insert_dummy_annotations():
     },
     {
         'title': 'Kroos',
-        'description': (
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer'
-            'nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed'
-            'nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis'
-            'ipsum. Praesent mauris. Fusce nec tellus sed augue semper'
-            'porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class'
-            'aptent taciti sociosq.'),
+        'description': SOME_LONGER_TEXT,
         'status': AnnotationStatus.objects.get(
             status='Concept'),
         'annotation_type': AnnotationType.objects.get(
