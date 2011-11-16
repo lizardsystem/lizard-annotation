@@ -1,7 +1,6 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 
 import logging
-import mongoengine
 from django.test import TestCase
 
 from lizard_annotation import models as m
