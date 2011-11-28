@@ -1,6 +1,7 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 
 import mongoengine
+import copy
 
 from django.core.urlresolvers import reverse
 
@@ -16,14 +17,15 @@ class GettersMixin(object):
         If url=True, add own absolute url, if ref_urls=True, add urls for any
         referencefields present.
         """
-        result = dict([(key, self[key]) for key in self])
+        self_copy = copy.deepcopy(self)
+        result = dict([(key, self_copy[key]) for key in self_copy])
         if url:
-            result.update(url=self.get_absolute_url)
+            result.update(url=self_copy.get_absolute_url)
         if ref_urls:
             result.update([
-                (key + '_url', self[key].get_absolute_url())
-                for key in self
-                if isinstance(self[key], mongoengine.Document)])
+                (key + '_url', self_copy[key].get_absolute_url())
+                for key in self_copy
+                if isinstance(self_copy[key], mongoengine.Document)])
         reference_objects = result.get('reference_objects')
         if reference_objects:
             for k in reference_objects:
