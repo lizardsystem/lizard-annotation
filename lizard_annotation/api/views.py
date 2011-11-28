@@ -91,33 +91,42 @@ class DocumentRootView(View):
         return [[d, d.get_absolute_url()]
                 for d in self.document.objects.all()]
 
+    def post(self, request, pk=None):
+        """Create a document."""
+        self.document(**self.CONTENT).save()
+        return Response(status.HTTP_200_OK)
+
 
 class AnnotationRootView(DocumentRootView):
     """
-    View all annotations.
+    View all annotations or create one.
     """
     document = Annotation
+    form = AnnotationForm
 
 
 class AnnotationTypeRootView(DocumentRootView):
     """
-    View all types.
+    View all types or create one.
     """
     document = AnnotationType
+    form = TypeForm
 
 
 class AnnotationCategoryRootView(DocumentRootView):
     """
-    View all categories.
+    View all categories or create one.
     """
     document = AnnotationCategory
+    form = CategoryForm
 
 
 class AnnotationStatusRootView(DocumentRootView):
     """
-    View all statuses.
+    View all statuses or create one.
     """
     document = AnnotationStatus
+    form = StatusForm
 
 
 class DocumentView(View):
@@ -184,50 +193,6 @@ class AnnotationCategoryView(DocumentView):
 class AnnotationStatusView(DocumentView):
     """
     Edit annotation status details.
-    """
-    document = AnnotationStatus
-    form = StatusForm
-
-
-class CreateView(View):
-    """
-    Baseview for create views.
-
-    Subclasses must set form and document attributes.
-    """
-    def post(self, request, pk=None):
-        """Create a document."""
-        self.document(**self.CONTENT).save()
-        return Response(status.HTTP_200_OK)
-
-
-class AnnotationCreateView(CreateView):
-    """
-    Create annotation.
-    """
-    document = Annotation
-    form = AnnotationForm
-
-
-class AnnotationTypeCreateView(CreateView):
-    """
-    Create annotation type.
-    """
-    document = AnnotationType
-    form = TypeForm
-
-
-class AnnotationCategoryCreateView(CreateView):
-    """
-    Create annotation category.
-    """
-    document = AnnotationCategory
-    form = CategoryForm
-
-
-class AnnotationStatusCreateView(CreateView):
-    """
-    Create annotation status.
     """
     document = AnnotationStatus
     form = StatusForm

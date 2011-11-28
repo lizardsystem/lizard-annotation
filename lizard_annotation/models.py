@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 
 class GettersMixin(object):
     """
-    Provides a get_dict() method and a get_property_list method()
+    Provides a get_dict() method and a get_property_list() method
     """
     def get_dict(self, url=False, ref_urls=False):
         """
