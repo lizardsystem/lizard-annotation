@@ -175,8 +175,11 @@ class DocumentView(View):
 
     def delete(self, request, pk):
         """Delete a document."""
-        self.document.objects.get(pk=pk).delete()
-        return Response(status.HTTP_200_OK)
+        try:
+            self.document.objects.get(pk=pk).delete()
+            return Response(status.HTTP_200_OK)
+        except self.document.DoesNotExist:
+            return Response(status.HTTP_404_NOT_FOUND)
 
 
 class AnnotationView(DocumentView):
