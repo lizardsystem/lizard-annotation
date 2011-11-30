@@ -27,6 +27,15 @@ the view 'model', and also if one of the methods return a dict with a key
 """
 
 
+def _update_mongoengine_document(obj, content):
+    """
+    Update fields from obj with values from content.
+    """
+    for key in content:
+        if key in obj:
+            obj[key] = content[key]
+
+
 class RootView(View):
     """
     Startpoint.
@@ -156,7 +165,7 @@ class DocumentView(View):
         """Update a document."""
         try:
             obj = self.document.objects.get(pk=pk)
-            obj.__dict__.update(self.CONTENT)
+            _update_mongoengine_document(obj, self.CONTENT)
             obj.save()
             return Response(status.HTTP_200_OK)
         except self.document.DoesNotExist:
