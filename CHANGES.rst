@@ -2,10 +2,12 @@ Changelog of lizard-annotation
 ===================================================
 
 
-0.2 (unreleased)
+0.2 (2011-12-07)
 ----------------
 
 - Changed the Django database backend to sqlite3 (from PostGIS).
+
+- Many improvements and bugfixes.
 
 
 0.1.1 (2011-10-24)
