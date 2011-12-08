@@ -19,6 +19,8 @@ from lizard_annotation.forms import StatusForm
 from lizard_annotation.forms import CategoryForm
 from lizard_annotation.forms import TypeForm
 
+from lizard_area.models import Area
+
 
 """
 Beware that the djangorestframework trips if you name an attribute of
@@ -63,6 +65,7 @@ class AnnotationGridView(View):
     Possible filters are:
 
     - annotation_type
+    - object_ident
     """
     def get(self, request):
         """
@@ -70,6 +73,8 @@ class AnnotationGridView(View):
 
         TODO Add some pagination if the grid gets really long.
         """
+        annotations = Annotation.objects.all()
+
         # Handle additional filtering
         annotation_type = request.GET.get('type')
         if annotation_type:
@@ -78,10 +83,20 @@ class AnnotationGridView(View):
                     annotation_type=annotation_type)
             except AnnotationType.DoesNotExist:
                 return Response(status.HTTP_404_NOT_FOUND)
-            annotations = Annotation.objects.filter(
-                annotation_type=type_obj)
-        else:
-            annotations = Annotation.objects.all()
+            annotations = annotations.filter(annotation_type=type_obj)
+
+        # Special case for annotations with area objects
+        area_ident = request.GET.get('object_ident')
+        if area_ident:
+            try:
+                area_pk = Area.objects.get(ident=area_ident).pk
+            except Area.DoesNotExist:
+                return Response(status.HTTP_404_NOT_FOUND)
+            obj_key = ('reference_objects.lizard_area_models_Area:' +
+                       str(area_pk))
+            annotations = annotations.filter(
+                __raw__={obj_key: {'$exists': True}})
+
         return {'annotations': [a.get_dict()
                                 for a in annotations()]}
 

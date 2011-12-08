@@ -81,7 +81,7 @@ class AnnotationForm(forms.Form):
         choices=annotation_type_choices,
     )
     reference_objects = forms.CharField(
-        required = False,
+        required=False,
         label=ugettext(u'Reference objects'),
         widget=forms.Textarea,
     )
