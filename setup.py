@@ -1,6 +1,6 @@
 from setuptools import setup
 
-version = '0.3dev'
+version = '0.2.1'
 
 long_description = '\n\n'.join([
     open('README.rst').read(),
@@ -15,6 +15,7 @@ install_requires = [
     'django-nose',
     'django-load',
     'lizard-ui >= 3.0',
+    'lizard_area',
     'pkginfo',
     'pymongo',
     'mongoengine',

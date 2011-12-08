@@ -2,8 +2,8 @@ Changelog of lizard-annotation
 ===================================================
 
 
-0.3 (unreleased)
-----------------
+0.2.1 (2011-12-08)
+------------------
 
 - Adds filtering on object_ident in the api grid view
 
