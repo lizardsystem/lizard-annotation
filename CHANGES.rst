@@ -5,7 +5,7 @@ Changelog of lizard-annotation
 0.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Adds rudimentary fixture capability for mongoengine
 
 
 0.2.1 (2011-12-08)

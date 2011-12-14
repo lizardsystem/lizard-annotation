@@ -1,5 +1,3 @@
-# (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
-
 from django import forms
 from django.utils.translation import ugettext
 from django.utils import simplejson
