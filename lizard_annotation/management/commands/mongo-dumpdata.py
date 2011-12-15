@@ -1,6 +1,13 @@
 #!/usr/bin/python
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
 
+"""
+A note about the complicated use of subprocess: Originally, it was the
+idea to put a header before every object exported by mongo. In that case,
+using a subprocess to do the inserting of headers makes it possible to
+dump large collections without storing them in memory.
+"""
+
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django_load import core as django_load
