@@ -7,6 +7,9 @@ Changelog of lizard-annotation
 
 - Adds rudimentary fixture capability for mongoengine
 
+- Adds basic authentication - all operations are now forbidden when not
+  authenticated
+
 
 0.2.1 (2011-12-08)
 ------------------

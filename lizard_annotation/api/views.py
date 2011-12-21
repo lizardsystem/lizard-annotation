@@ -43,6 +43,9 @@ class RootView(View):
     Startpoint.
     """
     def get(self, request):
+        if request.user.is_anonymous():
+            return Response(status.HTTP_403_FORBIDDEN)
+
         return {
             "annotations grid": reverse(
                 'lizard_annotation_api_annotation_grid'),
@@ -73,6 +76,9 @@ class AnnotationGridView(View):
 
         TODO Add some pagination if the grid gets really long.
         """
+        if request.user.is_anonymous():
+            return Response(status.HTTP_403_FORBIDDEN)
+
         annotations = Annotation.objects.all()
 
         # Handle additional filtering
@@ -112,11 +118,17 @@ class DocumentRootView(View):
         Read a document list. Assumes documents have a get_absolute_url()
         method implemented.
         """
+        if request.user.is_anonymous():
+            return Response(status.HTTP_403_FORBIDDEN)
+
         return [[d, d.get_absolute_url()]
                 for d in self.document.objects.all()]
 
     def post(self, request, pk=None):
         """Create a document."""
+        if request.user.is_anonymous():
+            return Response(status.HTTP_403_FORBIDDEN)
+
         self.document(**self.CONTENT).save()
         return Response(status.HTTP_200_OK)
 
@@ -161,6 +173,9 @@ class DocumentView(View):
     """
     def get(self, request, pk):
         """Read a document."""
+        if request.user.is_anonymous():
+            return Response(status.HTTP_403_FORBIDDEN)
+
         try:
             obj = self.document.objects.get(pk=pk)
         except self.document.DoesNotExist:
@@ -178,6 +193,9 @@ class DocumentView(View):
 
     def put(self, request, pk):
         """Update a document."""
+        if request.user.is_anonymous():
+            return Response(status.HTTP_403_FORBIDDEN)
+
         try:
             obj = self.document.objects.get(pk=pk)
             _update_mongoengine_document(obj, self.CONTENT)
@@ -190,6 +208,9 @@ class DocumentView(View):
 
     def delete(self, request, pk):
         """Delete a document."""
+        if request.user.is_anonymous():
+            return Response(status.HTTP_403_FORBIDDEN)
+
         try:
             self.document.objects.get(pk=pk).delete()
             return Response(status.HTTP_200_OK)
