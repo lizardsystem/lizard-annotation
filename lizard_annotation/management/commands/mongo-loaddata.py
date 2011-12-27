@@ -59,6 +59,7 @@ class Command(BaseCommand):
                 import_process.stdin.write(line)
         if import_process:
             import_process.stdin.close()
+            import_process.wait()
 
 
 

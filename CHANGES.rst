@@ -5,7 +5,8 @@ Changelog of lizard-annotation
 0.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Improves mongo-loaddata management command: Now it waits for subprocess
+  to complete.
 
 
 0.3 (2011-12-27)
