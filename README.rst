@@ -19,3 +19,15 @@ annotation as user buildout::
 
 Of course, creating a test postgis database is necessary as well, but since the
 use of a mongodb is still somewhat recent, this is explicitly described above.
+
+It is possible to dump and load mongo data in the same way as django data via
+The management commands mongo-dumpdata and mongo-loaddata, for example::
+
+    # Dump all data to fixture
+    bin/django mongo-dumpdata lizard_annotation > lizard_annotation.mongo
+    # Dump Annotation collection
+    bin/django mongo-dumpdata lizard_annotation.Annotation
+
+    bin/django mongo-loaddata lizard_annotation.mongo
+
+
