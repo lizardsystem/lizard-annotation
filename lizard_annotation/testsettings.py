@@ -38,15 +38,19 @@ DATABASES = {
         }
     }
 
+# Settings to connect mongodb
 MONGODB_SETTINGS = {
     'username': 'buildout',
     'password': 'buildout',
     'host': 'localhost',
-    'port': 27017,
+    'port': 27017
 }
 
+MONGODB_NAME = 'annotation'
+
 import mongoengine
-mongoengine.connect('annotation', **MONGODB_SETTINGS)
+mongoengine.connect(MONGODB_NAME, **MONGODB_SETTINGS)
+
 
 SITE_ID = 1
 INSTALLED_APPS = [
