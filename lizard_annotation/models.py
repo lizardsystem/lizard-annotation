@@ -4,9 +4,10 @@ from django.db import models
 import mongoengine
 import copy
 
-from django.contrib.contenttype.models import ContentType
+from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from django.contrib.contenttypes import generic
 
 
 class GettersMixin(object):
@@ -167,7 +168,7 @@ class Annotation(models.Model):
         null=True,
         blank=True
     )
-    reference_objects = models.ManyToMany(
+    reference_objects = models.ManyToManyField(
         ContentType,
         through='ReferenceObject'
     )

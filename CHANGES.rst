@@ -5,9 +5,7 @@ Changelog of lizard-annotation
 0.4 (unreleased)
 ----------------
 
-- Improves mongo-loaddata management command: Now it waits for subprocess
-  to complete.
-
+- Reworked models to use postgres instead of mongodb
 
 0.3 (2011-12-27)
 ----------------
