@@ -1,9 +1,12 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
+from django.db import models
 
 import mongoengine
 import copy
 
+from django.contrib.contenttype.models import ContentType
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
 
 
 class GettersMixin(object):
@@ -55,10 +58,14 @@ class ReferenceObject(mongoengine.EmbeddedDocument, GettersMixin):
     def __unicode__(self):
         return self.reference_filter
 
+# Here starts the postgres implementation...
+class AnnotationType(models.Model, GettersMixin):
 
-class AnnotationType(mongoengine.Document, GettersMixin):
-
-    annotation_type = mongoengine.StringField()
+    annotation_type = models.CharField(
+        max_length=256,
+        null=True,
+        blank=True,
+    )
 
     def __unicode__(self):
         return self.annotation_type
@@ -67,10 +74,18 @@ class AnnotationType(mongoengine.Document, GettersMixin):
         return reverse('lizard_annotation_api_type', kwargs={'pk': self.pk})
 
 
-class AnnotationCategory(mongoengine.Document, GettersMixin):
+class AnnotationCategory(models.Model, GettersMixin):
 
-    category = mongoengine.StringField()
-    annotation_type = mongoengine.ReferenceField(AnnotationType)
+    annotation_category = models.CharField(
+        max_length=256,
+        null=True,
+        blank=True,
+    )
+    annotation_type = models.ForeignKey(
+        AnnotationType,
+        null=True,
+        blank=True,
+    )
 
     def __unicode__(self):
         return self.category
@@ -82,10 +97,18 @@ class AnnotationCategory(mongoengine.Document, GettersMixin):
         )
 
 
-class AnnotationStatus(mongoengine.Document, GettersMixin):
+class AnnotationStatus(models.Model, GettersMixin):
 
-    status = mongoengine.StringField()
-    annotation_type = mongoengine.ReferenceField(AnnotationType)
+    annotation_status = models.CharField(
+        max_length=256,
+        null=True,
+        blank=True,
+    )
+    annotation_type = models.ForeignKey(
+        AnnotationType,
+        null=True,
+        blank=True,
+    )
 
     def __unicode__(self):
         return self.status
@@ -94,30 +117,69 @@ class AnnotationStatus(mongoengine.Document, GettersMixin):
         return reverse('lizard_annotation_api_status', kwargs={'pk': self.pk})
 
 
-class Annotation(mongoengine.Document, GettersMixin):
+class ReferenceObject(models.Model):
+    annotation = models.ForeignKey('Annotation')
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey('content_type', 'object_id')
+
+
+class Annotation(models.Model):
+    """
+    Annotation.
+    """
     """
     reference_object field expects a dict. object
     like {"Gebied100": RelatedObject,}.
     """
-    title = mongoengine.StringField()
-    description = mongoengine.StringField()
-    datetime_period_start = mongoengine.DateTimeField()
-    datetime_period_end = mongoengine.DateTimeField()
+    title = models.CharField(
+        max_length=256,
+        null=True,
+        blank=True,
+    )
+    description = models.CharField(
+        max_length=256,
+        null=True,
+        blank=True,
+    )
+    datetime_period_start = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+    datetime_period_end = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
     # References
-    status = mongoengine.ReferenceField(AnnotationStatus)
-    annotation_type = mongoengine.ReferenceField(AnnotationType)
-    category = mongoengine.ReferenceField(AnnotationCategory)
-    reference_objects = mongoengine.DictField()
-    # Journaling
-    datetime_created = mongoengine.DateTimeField()
-    created_by = mongoengine.StringField()
-    datetime_modified = mongoengine.DateTimeField()
-    modified_by = mongoengine.StringField()
+    annotation_status = models.ForeignKey(
+        AnnotationStatus,
+        null=True,
+        blank=True
+    )
+    annotation_type = models.ForeignKey(
+        AnnotationType,
+        null=True,
+        blank=True
+    )
+    annotation_category = models.ForeignKey(
+        AnnotationCategory,
+        null=True,
+        blank=True
+    )
+    reference_objects = models.ManyToMany(
+        ContentType,
+        through='ReferenceObject'
+    )
 
     def __unicode__(self):
         return self.title
 
     def get_absolute_url(self):
+        #TODO
+        """
+        
+        """
         return reverse(
             'lizard_annotation_api_annotation',
             kwargs={'pk': self.pk},
