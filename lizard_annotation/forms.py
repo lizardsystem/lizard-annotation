@@ -11,10 +11,10 @@ from lizard_annotation.models import ReferenceObject
 from lizard_annotation.api.utils import wrap_datetime
 from lizard_annotation.api.utils import unwrap_datetime
 
-annotation_status_choices = [(ans.status, ans.status)
+annotation_status_choices = [(ans.annotation_status, ans.annotation_status)
                              for ans in AnnotationStatus.objects.all()]
 
-annotation_category_choices = [(anc.category, anc.category)
+annotation_category_choices = [(anc.annotation_category, anc.annotation_category)
                                for anc in AnnotationCategory.objects.all()]
 
 annotation_type_choices = [(ans.annotation_type, ans.annotation_type)
@@ -84,90 +84,21 @@ class AnnotationForm(forms.Form):
         widget=forms.Textarea,
     )
     # TODO Something with the objects, workspaces, etc.
-    # Journaling
-    created_by = forms.CharField(
-        label=ugettext(u'Created by'),
-    )
-    date_created = forms.DateField(
-        required=False,
-        label=ugettext('Date created'),
-        widget=forms.DateInput,
-    )
-    time_created = forms.TimeField(
-        required=False,
-        label=ugettext('Time created'),
-        widget=forms.TimeInput,
-    )
-    modified_by = forms.CharField(
-        required=False,
-        label=ugettext(u'Modified by'),
-    )
-    date_modified = forms.DateField(
-        required=False,
-        label=ugettext('Date modified'),
-        widget=forms.DateInput,
-    )
-    time_modified = forms.TimeField(
-        required=False,
-        label=ugettext('Time modified'),
-        widget=forms.TimeInput,
-    )
-
-    def clean_status(self):
+    def clean_annotation_status(self):
         """Return the Status object."""
-        status = self.cleaned_data['status']
-        obj = AnnotationStatus.objects.get(status=status)
+        status = self.cleaned_data['annotation_status']
+        obj = AnnotationStatus.objects.get(
+            annotation_status=annotation_status,
+        )
         return obj
 
-    def clean_category(self):
+    def clean_annotation_category(self):
         """Return the Category object."""
-        category = self.cleaned_data['category']
-        obj = AnnotationCategory.objects.get(category=category)
+        annotation_category = self.cleaned_data['annotation_category']
+        obj = AnnotationCategory.objects.get(
+            annotation_category=annotation_category,
+        )
         return obj
-
-    def clean_reference_objects(self):
-        """
-        Coerce eference_objects from JSON to python and vice versa.
-
-        Vice versa, because form cleaning is invoked both for displaying
-        a form in the html representation of the api, and for cleaning
-        posted content by the form. In the first case it should be
-        converted to JSON, in the latter case to python, including
-        instantiating each reference object, verifying its existence
-        and filling in its filter and unicode.
-        """
-        if isinstance(self.data['reference_objects'], dict):
-            # This is the case when the form data comes really from
-            # the client. Yes, restframework does this to prepopulate the
-            # forms in html representation.
-            self.data['reference_objects'] = simplejson.dumps(
-                self.data['reference_objects'],
-            )
-
-        if isinstance(self.data['reference_objects'], unicode):
-            # This is the case when the form
-            # data comes really from the client.
-            ref_dict = simplejson.loads(self.data['reference_objects'])
-            ref_objs = {}
-            for r_old in ref_dict.values():
-                r_new = ReferenceObject()
-                r_new.reference_model = r_old['reference_model']
-                r_new.reference_id = r_old['reference_id']
-                try:
-                    model = load_object(r_new.reference_model)
-                except:
-                    raise forms.ValidationError('Reference model not found')
-                try:
-                    reference_object = model.objects.get(pk=r_new.reference_id)
-                except:
-                    raise forms.ValidationError('Reference object not found')
-                # Use its name and reconstruct the filter
-                r_new.reference_name = unicode(reference_object)
-                r_new.reference_filter = (
-                    r_new.reference_model.replace('.', '_') +
-                    ':' + r_new.reference_id)
-                ref_objs[r_new.reference_filter] = r_new
-            return ref_objs
 
     clean_annotation_type = _clean_annotation_type
 
@@ -184,7 +115,7 @@ class AnnotationForm(forms.Form):
 
 class StatusForm(forms.Form):
     """Form for editing of statuses."""
-    status = forms.CharField(
+    annotation_status = forms.CharField(
         label=ugettext(u'Annotation status'),
     )
     annotation_type = forms.ChoiceField(
@@ -197,7 +128,7 @@ class StatusForm(forms.Form):
 
 class CategoryForm(forms.Form):
     """Form for editing of categories."""
-    category = forms.CharField(
+    annotation_category = forms.CharField(
         label=ugettext(u'Annotation category'),
     )
     annotation_type = forms.ChoiceField(

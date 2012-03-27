@@ -9,25 +9,29 @@ from djangorestframework.response import Response
 from djangorestframework.views import View
 from djangorestframework import status
 
-from lizard_annotation.models import Annotation
-from lizard_annotation.models import AnnotationType
-from lizard_annotation.models import AnnotationStatus
-from lizard_annotation.models import AnnotationCategory
+from lizard_annotation.models import (
+    Annotation,
+    AnnotationType,
+    AnnotationStatus,
+    AnnotationCategory,
+    ReferenceObject,
+)
 
-from lizard_annotation.forms import AnnotationForm
-from lizard_annotation.forms import StatusForm
-from lizard_annotation.forms import CategoryForm
-from lizard_annotation.forms import TypeForm
+from lizard_annotation.forms import (
+    AnnotationForm,
+    StatusForm,
+    CategoryForm,
+    TypeForm,
+)
 
+from django.contrib.contenttypes.models import ContentType
 from lizard_area.models import Area
-
 
 """
 Beware that the djangorestframework trips if you name an attribute of
 the view 'model', and also if one of the methods return a dict with a key
 'model' in it. Hence the attribute 'document' on a number of classes
 """
-
 
 def _update_mongoengine_document(obj, content):
     """
@@ -93,18 +97,21 @@ class AnnotationGridView(View):
 
         # Special case for annotations with area objects
         area_ident = request.GET.get('object_ident')
+        area_ct= ContentType.objects.get_for_model(Area)
         if area_ident:
             try:
                 area_pk = Area.objects.get(ident=area_ident).pk
             except Area.DoesNotExist:
                 return Response(status.HTTP_404_NOT_FOUND)
-            obj_key = ('reference_objects.lizard_area_models_Area:' +
-                       str(area_pk))
-            annotations = annotations.filter(
-                __raw__={obj_key: {'$exists': True}})
+            reference_objects = ReferenceObject.objects.filter(
+                content_type=area_ct,
+                object_id=area_pk
+            )
+            annotations = [r.annotation for r in reference_objects]
+                
 
         return {'annotations': [a.get_dict()
-                                for a in annotations()]}
+                                for a in annotations]}
 
 
 class DocumentRootView(View):

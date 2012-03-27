@@ -38,23 +38,23 @@ def insert_dummy_categories():
                     'annotation_type': 'interpretatie'})[0]
     categories = [
         {
-            'category': 'Ecologie',
+            'annotation_category': 'Ecologie',
             'annotation_type': annotation_type,
         },
         {
-            'category': 'onderzoek Kwantiteit',
+            'annotation_category': 'onderzoek Kwantiteit',
             'annotation_type': annotation_type,
         },
         {
-            'category': 'In',
+            'annotation_category': 'In',
             'annotation_type': annotation_type,
         },
         {
-            'category': 'Algemeen',
+            'annotation_category': 'Algemeen',
             'annotation_type': annotation_type,
         },
         {
-            'category': 'Waterkwaliteit',
+            'annotation_category': 'Waterkwaliteit',
             'annotation_type': annotation_type,
         }]
 
@@ -83,23 +83,23 @@ def insert_dummy_annotationstatuses():
             'annotation_type': 'actie'})[0]
     statuses = [
         {
-            'status': 'In bewerking',
+            'annotation_status': 'In bewerking',
             'annotation_type': annotationtype_interp,
         },
         {
-            'status': 'Concept',
+            'annotation_status': 'Concept',
             'annotation_type': annotationtype_interp,
         },
         {
-            'status': 'Bewerking',
+            'annotation_status': 'Bewerking',
             'annotation_type': annotationtype_interp,
         },
         {
-            'status': 'Definitief',
+            'annotation_status': 'Definitief',
             'annotation_type': annotationtype_interp,
         },
         {
-            'status': 'Afgehandeld',
+            'annotation_status': 'Afgehandeld',
             'annotation_type': annotationtype_action,
         }]
 
@@ -110,59 +110,29 @@ def insert_dummy_annotationstatuses():
 
 def insert_dummy_annotations():
 
-    obj_a = ReferenceObject()
-    obj_a.reference_id = '151'
-    obj_a.reference_model = 'lizard_area.models.Area'
-    obj_a.reference_name = 'Aan-afvoergebied A'
-    obj_a.reference_filter = '%s:%s' % (
-        obj_a.reference_model.replace('.', '_'),
-        obj_a.reference_id)
-
-    obj_b = ReferenceObject()
-    obj_b.reference_id = '152'
-    obj_b.reference_model = 'lizard_area.models.Area'
-    obj_b.reference_name = 'Aan-afvoergebied B'
-    obj_b.reference_filter = '%s:%s' % (
-        obj_b.reference_model.replace('.', '_'),
-        obj_b.reference_id)
-
     annotations = [{
         'title': 'Licht doorlatenheid en milieu vriendelijke oevers',
         'description': SOME_LONGER_TEXT,
-        'status': AnnotationStatus.objects.get(
-            status='In bewerking'),
+        'annotation_status': AnnotationStatus.objects.get(
+            annotation_status='In bewerking'),
         'annotation_type': AnnotationType.objects.get(
             annotation_type='interpretatie'),
-        'category': AnnotationCategory.objects.get(
-            category='Ecologie'),
-        'created_by': 'Alexandr',
-        'datetime_created': datetime.today(),
-        'datetime_period_start': datetime.today() + timedelta(days=-3),
-        'datetime_period_end': None,
-        'reference_objects': {
-            obj_a.reference_filter: obj_a,
-            obj_b.reference_filter: obj_b,
-        },
+        'annotation_category': AnnotationCategory.objects.get(
+            annotation_category='Ecologie'),
     },
     {
         'title': 'Kroos',
         'description': SOME_LONGER_TEXT,
-        'status': AnnotationStatus.objects.get(
-            status='Concept'),
+        'annotation_status': AnnotationStatus.objects.get(
+            annotation_status='Concept'),
         'annotation_type': AnnotationType.objects.get(
             annotation_type='interpretatie'),
-        'category': AnnotationCategory.objects.get(
-            category='onderzoek Kwantiteit'),
-        'created_by': 'Alexandr',
-        'datetime_created': datetime.today(),
-        'datetime_period_start': datetime.today(),
-        'datetime_period_end': datetime.today() + timedelta(days=7),
-        'reference_objects': {obj_a.reference_filter: obj_a},
+        'annotation_category': AnnotationCategory.objects.get(
+            annotation_category='onderzoek Kwantiteit'),
    }]
 
     for item in annotations:
-        annotation = Annotation(**item)
-        annotation.save()
+        annotation = Annotation.objects.create(**item)
 
 
 def annotations_list(reference_filter):

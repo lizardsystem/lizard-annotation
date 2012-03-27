@@ -4,9 +4,9 @@ from django.conf.urls.defaults import patterns
 from django.conf.urls.defaults import url
 from django.contrib import admin
 
-from lizard_annotation.views import AnnotationEditView
-from lizard_annotation.views import AnnotationDetailView
-from lizard_annotation.views import AnnotationView
+#from lizard_annotation.views import AnnotationEditView
+#from lizard_annotation.views import AnnotationDetailView
+#from lizard_annotation.views import AnnotationView
 from lizard_ui.urls import debugmode_urlpatterns
 
 admin.autodiscover()
