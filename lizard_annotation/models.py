@@ -5,9 +5,10 @@ import mongoengine
 import copy
 
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
+
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
-from django.contrib.contenttypes import generic
 
 
 class GettersMixin(object):
@@ -49,23 +50,19 @@ class GettersMixin(object):
         return property_list
 
 
-class ReferenceObject(mongoengine.EmbeddedDocument, GettersMixin):
-
-    reference_id = mongoengine.StringField()
-    reference_model = mongoengine.StringField()
-    reference_name = mongoengine.StringField()
-    reference_filter = mongoengine.StringField()
-
-    def __unicode__(self):
-        return self.reference_filter
 
 # Here starts the postgres implementation...
 class AnnotationType(models.Model, GettersMixin):
+
+    class Meta:
+        verbose_name = _('Annotation type')
+        verbose_name_plural = _('Annotation types')
 
     annotation_type = models.CharField(
         max_length=256,
         null=True,
         blank=True,
+        verbose_name=_('Annotation type'),
     )
 
     def __unicode__(self):
@@ -77,15 +74,21 @@ class AnnotationType(models.Model, GettersMixin):
 
 class AnnotationCategory(models.Model, GettersMixin):
 
+    class Meta:
+        verbose_name = _('Annotation category')
+        verbose_name_plural = _('Annotation categories')
+
     annotation_category = models.CharField(
         max_length=256,
         null=True,
         blank=True,
+        verbose_name=_('Annotation category'),
     )
     annotation_type = models.ForeignKey(
         AnnotationType,
         null=True,
         blank=True,
+        verbose_name=_('Annotation type'),
     )
 
     def __unicode__(self):
@@ -100,15 +103,21 @@ class AnnotationCategory(models.Model, GettersMixin):
 
 class AnnotationStatus(models.Model, GettersMixin):
 
+    class Meta:
+        verbose_name = _('Annotation status')
+        verbose_name_plural = _('Annotation statuses')
+
     annotation_status = models.CharField(
         max_length=256,
         null=True,
         blank=True,
+        verbose_name=_('Annotation status'),
     )
     annotation_type = models.ForeignKey(
         AnnotationType,
         null=True,
         blank=True,
+        verbose_name=_('Annotation type'),
     )
 
     def __unicode__(self):
@@ -119,6 +128,14 @@ class AnnotationStatus(models.Model, GettersMixin):
 
 
 class ReferenceObject(models.Model):
+    """
+    Object that refers to any possible object within the site. 
+    """
+
+    class Meta:
+        verbose_name = _('Referred object')
+        verbose_name_plural = _('Referred objects')
+
     annotation = models.ForeignKey('Annotation')
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
@@ -126,6 +143,10 @@ class ReferenceObject(models.Model):
 
 
 class Annotation(models.Model):
+
+    class Meta:
+        verbose_name = _('Annotation')
+        verbose_name_plural = _('Annotations')
     """
     Annotation.
     """
@@ -133,44 +154,52 @@ class Annotation(models.Model):
     reference_object field expects a dict. object
     like {"Gebied100": RelatedObject,}.
     """
-    title = models.CharField(
+    title = models.TextField(
         max_length=256,
         null=True,
         blank=True,
+        verbose_name=_('Title'),
     )
     description = models.CharField(
         max_length=256,
         null=True,
         blank=True,
+        verbose_name=_('Description'),
     )
     datetime_period_start = models.DateTimeField(
         null=True,
         blank=True,
+        verbose_name=_('Date of start of period'),
     )
     datetime_period_end = models.DateTimeField(
         null=True,
         blank=True,
+        verbose_name=_('Date of end of period'),
     )
 
     # References
     annotation_status = models.ForeignKey(
         AnnotationStatus,
         null=True,
-        blank=True
+        blank=True,
+        verbose_name=_('Annotation status'),
     )
     annotation_type = models.ForeignKey(
         AnnotationType,
         null=True,
-        blank=True
+        blank=True,
+        verbose_name=_('Annotation type'),
     )
     annotation_category = models.ForeignKey(
         AnnotationCategory,
         null=True,
-        blank=True
+        blank=True,
+        verbose_name=_('Annotation category'),
     )
     reference_objects = models.ManyToManyField(
         ContentType,
-        through='ReferenceObject'
+        through='ReferenceObject',
+        verbose_name=_('Referred objects'),
     )
 
     def __unicode__(self):
