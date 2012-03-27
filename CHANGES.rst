@@ -2,7 +2,7 @@ Changelog of lizard-annotation
 ===================================================
 
 
-0.4 (unreleased)
+0.4 (2012-03-27)
 ----------------
 
 - Reworked models to use postgres instead of mongodb
