@@ -22,19 +22,15 @@ class GettersMixin(object):
         If url=True, add own absolute url, if ref_urls=True, add urls for any
         referencefields present.
         """
-        self_copy = copy.deepcopy(self)
-        result = dict([(key, self_copy[key]) for key in self_copy])
+        fieldnames = (field.name for field in self._meta.fields)
+        result = dict((field,getattr(self, field)) for field in fieldnames)
         if url:
-            result.update(url=self_copy.get_absolute_url)
+            result.update(url=self.get_absolute_url())
         if ref_urls:
-            result.update([
-                (key + '_url', self_copy[key].get_absolute_url())
-                for key in self_copy
-                if isinstance(self_copy[key], mongoengine.Document)])
-        reference_objects = result.get('reference_objects')
-        if reference_objects:
-            for k in reference_objects:
-                reference_objects[k] = reference_objects[k].get_dict()
+            result.update(dict(
+                (key + '_url', value.get_absolute_url())
+                for key, value in result.iteritems()
+                if isinstance(value, models.Model)))
         return result
 
     def get_property_list(self, properties=None):
@@ -50,8 +46,6 @@ class GettersMixin(object):
         return property_list
 
 
-
-# Here starts the postgres implementation...
 class AnnotationType(models.Model, GettersMixin):
 
     class Meta:
@@ -92,7 +86,7 @@ class AnnotationCategory(models.Model, GettersMixin):
     )
 
     def __unicode__(self):
-        return self.category
+        return self.annotation_category
 
     def get_absolute_url(self):
         return reverse(
@@ -121,13 +115,13 @@ class AnnotationStatus(models.Model, GettersMixin):
     )
 
     def __unicode__(self):
-        return self.status
+        return self.annotation_status
 
     def get_absolute_url(self):
         return reverse('lizard_annotation_api_status', kwargs={'pk': self.pk})
 
 
-class ReferenceObject(models.Model):
+class ReferenceObject(models.Model, GettersMixin):
     """
     Object that refers to any possible object within the site. 
     """
@@ -142,7 +136,7 @@ class ReferenceObject(models.Model):
     content_object = generic.GenericForeignKey('content_type', 'object_id')
 
 
-class Annotation(models.Model):
+class Annotation(models.Model, GettersMixin):
 
     class Meta:
         verbose_name = _('Annotation')
@@ -154,14 +148,13 @@ class Annotation(models.Model):
     reference_object field expects a dict. object
     like {"Gebied100": RelatedObject,}.
     """
-    title = models.TextField(
+    title = models.CharField(
         max_length=256,
         null=True,
         blank=True,
         verbose_name=_('Title'),
     )
-    description = models.CharField(
-        max_length=256,
+    description = models.TextField(
         null=True,
         blank=True,
         verbose_name=_('Description'),
