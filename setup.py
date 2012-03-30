@@ -17,8 +17,6 @@ install_requires = [
     'lizard-ui >= 3.0',
     'lizard_area',
     'pkginfo',
-    'pymongo',
-    'mongoengine',
     'djangorestframework',
     ],
 
