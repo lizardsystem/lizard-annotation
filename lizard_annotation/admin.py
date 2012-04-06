@@ -10,16 +10,8 @@ from lizard_annotation.models import (
 )
 
 
-class ReferenceObjectInline(admin.TabularInline):
-    model = ReferenceObject
-
-class AnnotationAdmin(admin.ModelAdmin):
-    inlines = [
-        ReferenceObjectInline,
-    ]
-
-
-admin.site.register(Annotation, AnnotationAdmin)
+admin.site.register(Annotation)
 admin.site.register(AnnotationStatus)
 admin.site.register(AnnotationCategory)
 admin.site.register(AnnotationType)
+admin.site.register(ReferenceObject)
