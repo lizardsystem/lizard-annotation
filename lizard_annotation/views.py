@@ -2,37 +2,112 @@
 
 # Create your views here.
 
-from django.views.generic import FormView
+from lizard_map.views import AppView
+from lizard_ui.views import ViewContextMixin
+from lizard_area.models import Area
+
 from django.utils.translation import pgettext
-from django.views.generic import TemplateView
-from django.views.generic import DetailView
+import django
+
+from django.views.generic import (
+    FormView,
+    TemplateView,
+    DetailView,
+)
 
 from lizard_annotation.forms import AnnotationForm
-from lizard_annotation.models import Annotation
-from lizard_ui.views import ViewContextMixin
-
-from lizard_annotation.mongodb_queries import annotations_list
-
-
-class AnnotationDetailView(ViewContextMixin, DetailView):
-
-    template_name = 'lizard_annotation/annotation_form.html'
+from lizard_annotation.models import (
+    Annotation,
+    AnnotationType,
+    AnnotationStatus,
+    AnnotationCategory,
+)
 
 
-class AnnotationEditView(ViewContextMixin, FormView):
 
-    template_name = 'lizard_annotation/annotation_form.html'
-    form_class = AnnotationForm
-    # TODO Add a nice success page
-    success_url = '.'
+class AnnotationDetailView(AppView):
+    """
+    Show annotation details
+    """
+    template_name='lizard_annotation/annotation_view.html'
 
-    labels = {
-        'save': pgettext(u'Save the contents of a form', 'Save'),
-    }
+    def annotation(self):
+        """Return an annotation"""
+        if not hasattr(self, '_annotation'):
+            self._annotation = Annotation.objects.get(
+                pk=self.annotation_id)
+        return self._annotation
 
-    def form_valid(self, form):
-        Annotation(**form.cleaned_data).save()
-        return super(FormView, self).form_valid(form)
+    def get(self, request, *args, **kwargs):
+        self.annotation_id = kwargs['annotation_id']
+        return super(AnnotationDetailView, self).get(
+            request, *args, **kwargs)
+
+
+def annotation_detailedit_portal(request):
+    """
+    Return JSON for request.
+    """
+    c = django.template.RequestContext(request)
+
+    annotation_id = request.GET.get('annotation_id', None)
+
+    init_parent = request.GET.get('parent_id', None)
+    area_id = request.GET.get('area_id', None)
+
+    if init_parent:
+        init_parent = annotation.objects.get(pk=init_parent)
+
+    init_area = None
+    init_waterbody = None
+
+    if area_id:
+        area =  Area.objects.get(ident=area_id)
+
+        if area.area_class == Area.AREA_CLASS_AAN_AFVOERGEBIED:
+            init_area = area
+        else:
+            init_waterbody = area
+
+    try:
+        annotation = Annotation.objects.get(pk=annotation_id)
+    except Annotation.DoesNotExist:
+        annotation = None
+
+    if request.user.is_authenticated():
+
+        template = django.template.loader.get_template(
+            'lizard_annotation/annotation_form.js',
+        )
+        context = django.template.RequestContext(request, {
+            'annotation': annotation,
+            'annotation_types': django.utils.simplejson.dumps(
+                [{'id': t.id, 'name': str(t)}
+                 for t in AnnotationType.objects.all()]
+            ),
+            'annotation_categories': django.utils.simplejson.dumps(
+                [{'id': c.id, 'name': str(c)}
+                 for c in AnnotationCategory.objects.all()]
+            ),
+            'annotation_statuses': django.utils.simplejson.dumps(
+                [{'id': s.id, 'name': str(s)}
+                 for s in AnnotationStatus.objects.all()]
+            ),
+            'init_parent': init_parent,
+            'init_area': init_area,
+            'init_waterbody': init_waterbody,
+        })
+
+    else:
+        template = django.template.loader.get_template(
+            'portals/geen_toegang.js',
+        )
+        context = None
+
+    return django.http.HttpResponse(
+        template.render(context),
+        mimetype="text/plain",
+    )
 
 
 class AnnotationView(ViewContextMixin, TemplateView):
@@ -51,7 +126,3 @@ class AnnotationView(ViewContextMixin, TemplateView):
         for an in Annotation.objects.all():
             objs.update(an.reference_objects)
         return objs.values()
-
-    def post(self, request, *args, **kwargs):
-        context = super(AnnotationView, self).get_context_data(**kwargs)
-        return context

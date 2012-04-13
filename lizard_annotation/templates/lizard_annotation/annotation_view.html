@@ -1,47 +1,68 @@
-{% extends "lizard_ui/lizardbase.html" %}{% load compress i18n %}
+{# KRW measure view: info and graphs on KRW measures #}
+{% load workspaces %}
+{% load utility %}
 
-{% block javascript %}
-{{ block.super }}
-<script type="text/javascript"
-        src="{{ STATIC_URL }}lizard_annotation/lizard_annotation.js"></script>
-{% endblock %}
-{% block content %}
-{{ block.super }}
-<div>
-  <select id="reference_objects">
-    {% for obj in view.reference_objects %}
-    <option value="{{ obj.reference_model }}{{ obj.reference_id }}">
-    {{ obj.reference_name }}
-    </option>
-    {% endfor %}
-  </select>
- <input id="annotation_view_url" type="HIDDEN" value="{% url lizard_annotation_view %}" />
-</div>
-
-<div>
-  <table id="annotation_table"  class="sortable-table">
-    <thead>
-      <tr>
-        <th>Titel</th>
-        <th>Categorie</th>
-        <th>Status</th>
-        <th>Datum</th>
-        <th>Door</th>
-      </tr>
-    </thead>
+<div id="textual" class="lizard" style="float: left;">
+  <table class="generic-table">
     <tbody>
-  {% for annotation in view.annotations %}
       <tr>
-        <td><a href="">{{ annotation.title }}</a></td>
-        <td>{{ annotation.category }}</td>
-        <td>{{ annotation.status }}</td>
-        <td>{{ annotation.dt_creation }}</td>
-        <td>{{ annotation.user_creator }}</td>
+        <td style="width: 25%;"><b>Status</b></td>
+        <td style="width: 25%;">
+          {{ view.annotation.annotation_status.annotation_status }}
+        </td>
+        <td style="width: 25%;"><b>Aanvang periode</b></td>
+        <td style="width: 25%;">
+          {{ view.annotation.datetime_period_start }}
+        </td>
       </tr>
-  {% endfor %}
+      <tr>
+        <td><b>Type</b></td>
+        <td>{{ view.annotation.annotation_type.annotation_type }}</td>
+        <td><b>Eind periode</b></td>
+        <td>{{ view.annotation.datetime_period_end }}</td>
+      </tr>
+      <tr>
+        <td><b>Categorie</b></td>
+        <td>{{ view.annotation.annotation_category }}</td>
+      </tr>
+      <tr>
+        <td colspan=4><b>Omschrijving</b></td>
+      </tr>
+      <tr>
+        <td colspan=4>
+          {% autoescape off %}
+          {{ view.annotation.description }}
+          {% endautoescape %}
+        </td>
+      </tr>
+      <tr>
+        <td><b>Gebieden</b></td>
+        <td colspan=3>
+          {{ view.annotation.areas.all|join:", "}}
+        </td>
+      </tr>
+      <tr>
+        <td><b>Waterlichamen</b></td>
+        <td colspan=3>
+          {{ view.annotation.waterbodies.all|join:", "}}
+        </td>
+      </tr>
+      <tr>
+        <td><b>Workspaces</b></td>
+        <td colspan=3>
+          {{ view.annotation.workspaces.all|join:", "}}
+        </td>
+      </tr>
+      <tr>
+        <td><b>Collages</b></td>
+        <td colspan=3>
+          {{ view.annotation.collages.all|join:", "}}
+        </td>
+      </tr>
     </tbody>
   </table>
-  <button id="annotation_view_cancel" type="button">Annuleer</button>
-  <button id="annotation_view_new" type="button">Nieuw</button>
 </div>
-{% endblock content %}
+  <table class="generic-table">
+    <tbody>
+  </table>
+</div>

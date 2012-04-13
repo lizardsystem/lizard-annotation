@@ -3,10 +3,11 @@ from django.utils.translation import ugettext
 from django.utils import simplejson
 from django_load.core import load_object
 
-from lizard_annotation.models import AnnotationStatus
-from lizard_annotation.models import AnnotationCategory
-from lizard_annotation.models import AnnotationType
-from lizard_annotation.models import ReferenceObject
+from lizard_annotation.models import (
+    AnnotationStatus,
+    AnnotationCategory,
+    AnnotationType,
+)
 
 from lizard_annotation.api.utils import wrap_datetime
 from lizard_annotation.api.utils import unwrap_datetime

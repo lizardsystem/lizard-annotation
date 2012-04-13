@@ -6,6 +6,7 @@ Changelog of lizard-annotation
 ----------------
 
 - Remove mongo-management commands
+- Create portal form and view for annotation viewing, editing and creation.
 
 
 0.4 (2012-03-27)

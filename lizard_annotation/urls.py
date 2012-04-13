@@ -1,12 +1,13 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
-from django.conf.urls.defaults import include
-from django.conf.urls.defaults import patterns
-from django.conf.urls.defaults import url
+from django.conf.urls.defaults import (
+    include,
+    patterns,
+    url,
+)
+
 from django.contrib import admin
 
-#from lizard_annotation.views import AnnotationEditView
-#from lizard_annotation.views import AnnotationDetailView
-#from lizard_annotation.views import AnnotationView
+from lizard_annotation.views import AnnotationDetailView
 from lizard_ui.urls import debugmode_urlpatterns
 
 admin.autodiscover()
@@ -18,17 +19,18 @@ urlpatterns = patterns(
     '',
     (r'^admin/', include(admin.site.urls)),
     (r'^api/', include('lizard_annotation.api.urls')),
-    #url(r'^edit/',
-        #AnnotationEditView.as_view(),
-        #name='edit_view'),
-    #url(r'^detail/$',
-        #AnnotationDetailView.as_view(),
-        #name=NAME_PREFIX + 'detail'),
-    #url(r'^view/$',
-        #AnnotationView.as_view(),
-        #name=NAME_PREFIX + 'view'),
-    # url(r'^something/',
-    #     direct.import.views.some_method,
-    #     name="name_it"),
-    )
+    (r'^view/(?P<annotation_id>\d+)/$',
+     AnnotationDetailView.as_view(),
+     {},
+     "lizard_annotation.annotation"),
+    (r'^form/(?P<annotation_id>\d+)/$',
+     AnnotationDetailView.as_view(),
+     {},
+     "lizard_annotation.annotation"),
+    # Annotation edit screens
+    (r'^annotation_detailedit_portal/$',
+    'lizard_annotation.views.annotation_detailedit_portal',
+     {},
+     "lizard_annotation.annotation_detailedit_portal"),
+)
 urlpatterns += debugmode_urlpatterns()

@@ -1,7 +1,14 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.txt.
-from django.db import models
+from django.contrib.gis.db import models
 
-import mongoengine
+from lizard_security.manager import FilteredGeoManager
+from lizard_measure.models import WaterBody
+from lizard_area.models import Area
+from lizard_workspace.models import (
+    LayerWorkspace,
+    LayerCollage,
+)
+
 import copy
 
 from django.contrib.contenttypes.models import ContentType
@@ -23,18 +30,21 @@ class GettersMixin(object):
         referencefields present.
         """
         fieldnames = (field.name for field in self._meta.fields)
-        result = dict((field,getattr(self, field)) for field in fieldnames)
-        if url:
-            result.update(url=self.get_absolute_url())
-        if ref_urls:
-            result.update(dict(
-                (key + '_url', value.get_absolute_url())
-                for key, value in result.iteritems()
-                if isinstance(value, models.Model)))
+        items = ((field,getattr(self, field)) for field in fieldnames)
+        result = {}
+        for k, v in items:
+            if isinstance(v, models.Model):
+                # Replace object by representation
+                result.update({k: str(v)})
+                if ref_urls:
+                    result.update({k + '_url': v.get_absolute_url()})
+            else:
+                result.update({k: v})
         return result
 
     def get_property_list(self, properties=None):
         obj_dict = self.get_dict()
+        print obj_dict
         if properties is None:
             properties = obj_dict.keys()
         property_list = []
@@ -121,21 +131,6 @@ class AnnotationStatus(models.Model, GettersMixin):
         return reverse('lizard_annotation_api_status', kwargs={'pk': self.pk})
 
 
-class ReferenceObject(models.Model, GettersMixin):
-    """
-    Object that refers to any possible object within the site. 
-    """
-
-    class Meta:
-        verbose_name = _('Referred object')
-        verbose_name_plural = _('Referred objects')
-
-    annotation = models.ForeignKey('Annotation')
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
-
-
 class Annotation(models.Model, GettersMixin):
 
     class Meta:
@@ -143,10 +138,6 @@ class Annotation(models.Model, GettersMixin):
         verbose_name_plural = _('Annotations')
     """
     Annotation.
-    """
-    """
-    reference_object field expects a dict. object
-    like {"Gebied100": RelatedObject,}.
     """
     title = models.CharField(
         max_length=256,
@@ -170,6 +161,12 @@ class Annotation(models.Model, GettersMixin):
         verbose_name=_('Date of end of period'),
     )
 
+    
+    geom = models.GeometryField(
+        null=True,
+        blank=True,
+        srid=4326,
+    )
     # References
     annotation_status = models.ForeignKey(
         AnnotationStatus,
@@ -189,21 +186,53 @@ class Annotation(models.Model, GettersMixin):
         blank=True,
         verbose_name=_('Annotation category'),
     )
-    reference_objects = models.ManyToManyField(
-        ContentType,
-        through='ReferenceObject',
-        verbose_name=_('Referred objects'),
+
+    # Many-to-manies
+    areas = models.ManyToManyField(
+        Area,
+        blank=True,
+        related_name='annotation_set',
+        verbose_name=_('Areas'),
+    )
+    waterbodies = models.ManyToManyField(
+        WaterBody,
+        blank=True,
+        related_name='annotation_set',
+        verbose_name=_('Waterbodies'),
+    )
+    workspaces = models.ManyToManyField(
+        LayerWorkspace,
+        blank=True,
+        related_name='annotation_set',
+        verbose_name=_('Workspaces'),
+    )
+    collages = models.ManyToManyField(
+        LayerCollage,
+        blank=True,
+        related_name='annotation_set',
+        verbose_name=_('Collages'),
+    )
+
+    # Cleared object tracking
+    valid = models.BooleanField(
+        default=True,
+        verbose_name=_('Valid'),
     )
 
     def __unicode__(self):
         return self.title
 
     def get_absolute_url(self):
-        #TODO
-        """
-        
-        """
         return reverse(
             'lizard_annotation_api_annotation',
             kwargs={'pk': self.pk},
         )
+
+    def get_geometry_wkt_string(self):
+        """
+        Returns geometry in the well known text format
+        """
+        if self.geom is None:
+            return ''
+        else:
+            return self.geom.wkt

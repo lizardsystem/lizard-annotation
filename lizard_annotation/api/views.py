@@ -14,7 +14,6 @@ from lizard_annotation.models import (
     AnnotationType,
     AnnotationStatus,
     AnnotationCategory,
-    ReferenceObject,
 )
 
 from lizard_annotation.forms import (
@@ -26,6 +25,7 @@ from lizard_annotation.forms import (
 
 from django.contrib.contenttypes.models import ContentType
 from lizard_area.models import Area
+from lizard_api.base import BaseApiView
 
 """
 Beware that the djangorestframework trips if you name an attribute of
@@ -100,14 +100,10 @@ class AnnotationGridView(View):
         area_ct= ContentType.objects.get_for_model(Area)
         if area_ident:
             try:
-                area_pk = Area.objects.get(ident=area_ident).pk
+                area = Area.objects.get(ident=area_ident)
             except Area.DoesNotExist:
                 return Response(status.HTTP_404_NOT_FOUND)
-            reference_objects = ReferenceObject.objects.filter(
-                content_type=area_ct,
-                object_id=area_pk
-            )
-            annotations = [r.annotation for r in reference_objects]
+            annotations = area.annotation_set.all()
                 
 
         return {'annotations': [a.get_dict()
@@ -260,3 +256,105 @@ class AnnotationStatusView(DocumentView):
     """
     document = AnnotationStatus
     form = StatusForm
+
+# Specialized view for the detailform
+class AnnotationFormView(BaseApiView):
+    """
+    Annotation view for form.
+    """
+    model_class = Annotation
+    name_field = 'title'
+
+    valid_field='valid'
+    valid_value=True
+
+    field_mapping = {
+        'id': 'id',
+        'title': 'title',
+        'description': 'description',
+        'datetime_period_start': 'datetime_period_start',
+        'datetime_period_end': 'datetime_period_end',
+        'geom': 'geom',
+        'annotation_status': 'annotation_status',
+        'annotation_type': 'annotation_type',
+        'annotation_category': 'annotation_category',
+        'valid': 'valid',
+    }
+
+
+    def get_object_for_api(self, annotation, flat=True,
+                           size=BaseApiView.COMPLETE, include_geom=False):
+        """
+        create annotation object
+        """
+
+        output = {}
+
+        if size == self.ID_NAME:
+            output = {
+                'id': annotation.id,
+                'name': annotation.title,
+            }
+
+
+        if size >= self.SMALL:
+            output = {
+                'id': annotation.id,
+                'title': annotation.title,
+                'description': annotation.description,
+                'datetime_period_start': annotation.datetime_period_start,
+                'datetime_period_end': annotation.datetime_period_end,
+                'annotation_status': self._get_related_object(
+                    annotation.annotation_status,
+                    flat,
+                ),
+                'annotation_type': self._get_related_object(
+                    annotation.annotation_type,
+                    flat,
+                ),
+                'annotation_category': self._get_related_object(
+                    annotation.annotation_category,
+                    flat,
+                ),
+                'areas': self._get_related_objects(
+                    annotation.areas,
+                    flat,
+                ),
+                'waterbodies': self._get_related_objects(
+                    annotation.waterbodies,
+                    flat,
+                ),
+                'workspaces': self._get_related_objects(
+                    annotation.workspaces,
+                    flat,
+                ),
+                'collages': self._get_related_objects(
+                    annotation.collages,
+                    flat,
+                ),
+                'valid': annotation.valid,
+            }
+
+        if include_geom:
+            output.update({
+                'geom': annotation.get_geometry_wkt_string(),
+            })
+            
+
+        return output
+
+    def update_many2many(self, record, model_field, linked_records):
+        """
+        update specific part of manyToMany relations.
+        input:
+        - record: annotation
+        - model_field. many2many field object
+        - linked_records. list with dictionaries with:
+            id: id of related objects
+            optional some relations in case the relation is through
+            another object
+        """
+        self.save_single_many2many_relation(record,
+            model_field,
+            linked_records,
+        )
