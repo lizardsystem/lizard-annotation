@@ -2,7 +2,7 @@ Changelog of lizard-annotation
 ===================================================
 
 
-0.5 (unreleased)
+0.5 (2012-04-13)
 ----------------
 
 - Remove mongo-management commands
