@@ -6,6 +6,22 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        (
+            "lizard_area",
+            "0021_auto__chg_field_areawfsconfiguration_cql_filter",
+        ),
+        (
+            "lizard_workspace",
+            "0026_auto__add_field_layercollageitem_grouping_hint",
+        ),
+        (
+            "lizard_measure",
+            "0023_auto__chg_field_measureperiod_" +             
+            "start_date__chg_field_measureperiod_end_",
+        ),
+    )
+
     def forwards(self, orm):
         
         # Adding field 'Annotation.data_set'

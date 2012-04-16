@@ -5,7 +5,7 @@ Changelog of lizard-annotation
 0.5.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add dependency on lizard_map to migration.
 
 
 0.5.1 (2012-04-16)
