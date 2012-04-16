@@ -6,6 +6,7 @@ Changelog of lizard-annotation
 ----------------
 
 - Remove debugger statement from form.
+- Add securityfields and corresponding migration.
 
 
 0.5 (2012-04-13)

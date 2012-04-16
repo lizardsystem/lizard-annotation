@@ -2,6 +2,7 @@
 from django.contrib.gis.db import models
 
 from lizard_security.manager import FilteredGeoManager
+from lizard_security.models import DataSet
 from lizard_measure.models import WaterBody
 from lizard_area.models import Area
 from lizard_workspace.models import (
@@ -161,7 +162,6 @@ class Annotation(models.Model, GettersMixin):
         verbose_name=_('Date of end of period'),
     )
 
-    
     geom = models.GeometryField(
         null=True,
         blank=True,
@@ -218,6 +218,13 @@ class Annotation(models.Model, GettersMixin):
         default=True,
         verbose_name=_('Valid'),
     )
+
+    # Security
+    data_set = models.ForeignKey(DataSet,
+                                 null=True,
+                                 blank=True)
+
+    objects = FilteredGeoManager()
 
     def __unicode__(self):
         return self.title
