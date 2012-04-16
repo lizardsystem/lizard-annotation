@@ -5,7 +5,7 @@ Changelog of lizard-annotation
 0.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Remove debugger statement from form.
 
 
 0.5 (2012-04-13)

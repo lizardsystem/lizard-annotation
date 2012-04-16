@@ -271,7 +271,6 @@
         handler: function() {
             var form = this.up('form').getForm();
             var form_window = this.up('window')
-            debugger;
             if (form.isValid()) {
                 /* todo: de waarden zelf gaan rangschikken en verzenden */
                 var values = form.getValues()
