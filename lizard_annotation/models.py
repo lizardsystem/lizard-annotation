@@ -3,7 +3,10 @@ from django.contrib.gis.db import models
 
 from lizard_security.manager import FilteredGeoManager
 from lizard_security.models import DataSet
-from lizard_measure.models import WaterBody
+from lizard_measure.models import (
+    WaterBody,
+    Measure,
+)
 from lizard_area.models import Area
 from lizard_workspace.models import (
     LayerWorkspace,
@@ -199,6 +202,12 @@ class Annotation(models.Model, GettersMixin):
         blank=True,
         related_name='annotation_set',
         verbose_name=_('Waterbodies'),
+    )
+    measures = models.ManyToManyField(
+        Measure,
+        blank=True,
+        related_name='annotation_set',
+        verbose_name=_('Measures'),
     )
     workspaces = models.ManyToManyField(
         LayerWorkspace,

@@ -324,6 +324,10 @@ class AnnotationFormView(BaseApiView):
                     annotation.waterbodies,
                     flat,
                 ),
+                'measures': self._get_related_objects(
+                    annotation.measures,
+                    flat,
+                ),
                 'workspaces': self._get_related_objects(
                     annotation.workspaces,
                     flat,

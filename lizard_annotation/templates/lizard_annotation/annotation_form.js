@@ -49,7 +49,7 @@
             xtype: 'hiddenfield'
         },
         {
-            fieldLabel: 'Naam',
+            fieldLabel: 'Titel',
             name: 'title',
             width: 200,
             xtype: 'textfield',
@@ -80,25 +80,7 @@
             name: 'description',
             anchor: '100%',
             xtype: 'htmleditor',
-            allowBlank: false
-        },
-        {
-            fieldLabel: 'Type',
-            name: 'annotation_type',
-            displayField: 'name',
-            valueField: 'id',
-            width: 400,
-            xtype: 'combodict',
-            store: {
-                fields: ['id', 'name'],
-                data: Ext.JSON.decode(
-                  {% autoescape off %}
-                  '{{ annotation_types }}'
-                  {% endautoescape %})
-            },
-            multiSelect: false,
-            forceSelection: true,
-            allowBlank: false
+            allowBlank: false,
         },
         {
             fieldLabel: 'Categorie',
@@ -119,7 +101,7 @@
             allowBlank: false
         },
         {
-            fieldLabel: 'Annotatie status',
+            fieldLabel: 'Status',
             name: 'annotation_status',
             displayField: 'name',
             valueField: 'id',
@@ -159,7 +141,7 @@
                         ],
                         proxy: {
                             type: 'ajax',
-                            url: '/area/api/catchment-areas/?node=root&_accept=application%2Fjson&size=id_name',
+                            url: '/area/api/catchment-areas/?_accept=application%2Fjson&size=id_name&flat=true',
                             reader: {
                                 type: 'json',
                                 root: 'areas'
@@ -181,6 +163,27 @@
                         proxy: {
                             type: 'ajax',
                         url: '/measure/api/waterbody/?node=root&_accept=application%2Fjson&size=id_name',
+                            reader: {
+                                type: 'json',
+                                root: 'data'
+                            }
+                        }
+                    }
+                },
+                {
+                    xtype: 'combomultiselect',
+                    fieldLabel: 'Maatregelen',
+                    name: 'measures',
+                    field_name: 'Maatregelen',
+                    read_at_once: false,
+                    combo_store: {
+                        fields: [
+                            {name: 'id', mapping: 'id' },
+                            {name: 'name', mapping: 'name' }
+                        ],
+                        proxy: {
+                            type: 'ajax',
+                        url: '/measure/api/measure/?node=root&_accept=application%2Fjson&size=id_name&include_geom=false',
                             reader: {
                                 type: 'json',
                                 root: 'data'

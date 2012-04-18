@@ -5,7 +5,10 @@ Changelog of lizard-annotation
 0.5.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add possibility to relate measures to annotations
+- Change column name in form
+- Widen popup space usage
+- Enable subareas to be selected
 
 
 0.5.2 (2012-04-16)

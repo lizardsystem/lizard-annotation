@@ -2,7 +2,7 @@
 {% load workspaces %}
 {% load utility %}
 
-<div id="textual" class="lizard" style="float: left;">
+<div id="textual" class="lizard wide">
   <table class="generic-table">
     <tbody>
       <tr>
@@ -16,14 +16,10 @@
         </td>
       </tr>
       <tr>
-        <td><b>Type</b></td>
-        <td>{{ view.annotation.annotation_type.annotation_type }}</td>
-        <td><b>Eind periode</b></td>
-        <td>{{ view.annotation.datetime_period_end }}</td>
-      </tr>
-      <tr>
         <td><b>Categorie</b></td>
         <td>{{ view.annotation.annotation_category }}</td>
+        <td><b>Eind periode</b></td>
+        <td>{{ view.annotation.datetime_period_end }}</td>
       </tr>
       <tr>
         <td colspan=4><b>Omschrijving</b></td>
@@ -45,6 +41,12 @@
         <td><b>Waterlichamen</b></td>
         <td colspan=3>
           {{ view.annotation.waterbodies.all|join:", "}}
+        </td>
+      </tr>
+      <tr>
+        <td><b>Maatregelen</b></td>
+        <td colspan=3>
+          {{ view.annotation.measures.all|join:", "}}
         </td>
       </tr>
       <tr>
