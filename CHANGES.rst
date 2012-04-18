@@ -2,7 +2,7 @@ Changelog of lizard-annotation
 ===================================================
 
 
-0.5.3 (unreleased)
+0.5.3 (2012-04-18)
 ------------------
 
 - Add possibility to relate measures to annotations
