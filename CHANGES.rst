@@ -2,7 +2,7 @@ Changelog of lizard-annotation
 ===================================================
 
 
-0.5.4 (unreleased)
+0.5.4 (2012-04-19)
 ------------------
 
 - Add default value to annotation type.
