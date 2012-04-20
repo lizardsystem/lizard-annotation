@@ -2,7 +2,7 @@ Changelog of lizard-annotation
 ===================================================
 
 
-0.5.5 (unreleased)
+0.5.5 (2012-04-20)
 ------------------
 
 - Remove database call from models.py
