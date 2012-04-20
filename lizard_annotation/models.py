@@ -182,7 +182,7 @@ class Annotation(models.Model, GettersMixin):
         null=True,
         blank=True,
         # Dirty trick to enforce default type for annotations
-        default=AnnotationType.objects.get(annotation_type='interpretatie').pk,
+        default=1,
         verbose_name=_('Annotation type'),
     )
     annotation_category = models.ForeignKey(

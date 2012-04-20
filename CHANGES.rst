@@ -5,7 +5,8 @@ Changelog of lizard-annotation
 0.5.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Remove database call from models.py
+  (default value for type annotation). Not good for server.
 
 
 0.5.4 (2012-04-19)
