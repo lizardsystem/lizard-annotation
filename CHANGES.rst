@@ -2,7 +2,7 @@ Changelog of lizard-annotation
 ===================================================
 
 
-0.5.6 (unreleased)
+0.5.6 (2012-04-25)
 ------------------
 
 - Changed location of date in form, title field wider (part of pp 315)
