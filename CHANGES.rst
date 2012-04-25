@@ -5,7 +5,9 @@ Changelog of lizard-annotation
 0.5.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Changed location of date in form, title field wider (part of pp 315)
+
+- Add reload behavior after editting annotation (pp 302 and 303).
 
 
 0.5.5 (2012-04-20)

@@ -6,7 +6,7 @@
     bodyPadding: '10 25 10 10',//padding on the right side 25 for scrollbar
     height: '100%',
     url: '/annotation/api/annotationview/?_accept=application/json&include_geom=true&action={% if annotation %}update{% else %}create{% endif %}',
-{% if annotation %}
+    {% if annotation %}
     loadProxy: {
         url: '/annotation/api/annotationform/',
         type: 'ajax',
@@ -51,29 +51,9 @@
         {
             fieldLabel: 'Titel',
             name: 'title',
-            width: 200,
+            width: 600,
             xtype: 'textfield',
             allowBlank: false
-        },
-        {
-            fieldLabel: 'Datum aanvang periode',
-            name: 'datetime_period_start',
-            width: 200,
-            xtype: 'datefield',
-            allowBlank: true,
-            format: 'd-m-Y',
-            altFormats: 'Y-m-d h:m:s',
-            submitFormat: 'Y-m-d h:m:s'
-        },
-        {
-            fieldLabel: 'Datum einde periode',
-            name: 'datetime_period_end',
-            width: 200,
-            xtype: 'datefield',
-            allowBlank: true,
-            format: 'd-m-Y',
-            altFormats: 'Y-m-d h:m:s',
-            submitFormat: 'Y-m-d h:m:s'
         },
         {
             fieldLabel: 'Omschrijving',
@@ -117,6 +97,26 @@
             multiSelect: false,
             forceSelection: true,
             allowBlank: false
+        },
+        {
+            fieldLabel: 'Waarneming van',
+            name: 'datetime_period_start',
+            width: 200,
+            xtype: 'datefield',
+            allowBlank: false,
+            format: 'd-m-Y',
+            altFormats: 'Y-m-d h:m:s',
+            submitFormat: 'Y-m-d h:m:s'
+        },
+        {
+            fieldLabel: 'tot',
+            name: 'datetime_period_end',
+            width: 200,
+            xtype: 'datefield',
+            allowBlank: false,
+            format: 'd-m-Y',
+            altFormats: 'Y-m-d h:m:s',
+            submitFormat: 'Y-m-d h:m:s'
         },
         {
             xtype:'fieldset',
@@ -291,12 +291,20 @@
                                     data:  Ext.JSON.encode(values)
                                 },
                                 method: 'POST',
-                                success: function(xhr) {
+                                callback: function(xhr) {
                                     Ext.Msg.alert("Opgeslagen", "Opslaan gelukt");
                                     form_window.close();
                                     form_window.setLoading(false);
                                     if (form_window.finish_edit_function) {
                                         form_window.finish_edit_function({% if annotation %}'update'{% else %}'create'{% endif%});
+                                    } else {
+                                        var store = Ext.StoreManager.lookup('analyse_store');
+                                        store.load({params: {object_ident: Lizard.CM.getContext().object.id}});
+                                        Ext.WindowManager.each(function(window) {
+                                            if (window.loader) {
+                                                window.loader.load();
+                                            }
+                                        })
                                     }
                                 },
                                 failure: function(xhr) {
