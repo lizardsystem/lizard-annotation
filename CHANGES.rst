@@ -2,7 +2,7 @@ Changelog of lizard-annotation
 ===================================================
 
 
-0.5.7 (unreleased)
+0.5.7 (2012-04-27)
 ------------------
 
 - Let form pass extent to geometry editor.
