@@ -33,15 +33,6 @@ the view 'model', and also if one of the methods return a dict with a key
 'model' in it. Hence the attribute 'document' on a number of classes
 """
 
-def _update_mongoengine_document(obj, content):
-    """
-    Update fields from obj with values from content.
-    """
-    for key in content:
-        if key in obj:
-            obj[key] = content[key]
-
-
 class RootView(View):
     """
     Startpoint.
@@ -110,7 +101,7 @@ class AnnotationGridView(View):
                                 for a in annotations]}
 
 
-class DocumentRootView(View):
+class ModelRootView(View):
     """
     Baseview for root views.
 
@@ -136,7 +127,7 @@ class DocumentRootView(View):
         return Response(status.HTTP_200_OK)
 
 
-class AnnotationRootView(DocumentRootView):
+class AnnotationRootView(ModelRootView):
     """
     View all annotations or create one.
     """
@@ -144,7 +135,7 @@ class AnnotationRootView(DocumentRootView):
     form = AnnotationForm
 
 
-class AnnotationTypeRootView(DocumentRootView):
+class AnnotationTypeRootView(ModelRootView):
     """
     View all types or create one.
     """
@@ -152,7 +143,7 @@ class AnnotationTypeRootView(DocumentRootView):
     form = TypeForm
 
 
-class AnnotationCategoryRootView(DocumentRootView):
+class AnnotationCategoryRootView(ModelRootView):
     """
     View all categories or create one.
     """
@@ -160,7 +151,7 @@ class AnnotationCategoryRootView(DocumentRootView):
     form = CategoryForm
 
 
-class AnnotationStatusRootView(DocumentRootView):
+class AnnotationStatusRootView(ModelRootView):
     """
     View all statuses or create one.
     """
@@ -168,7 +159,7 @@ class AnnotationStatusRootView(DocumentRootView):
     form = StatusForm
 
 
-class DocumentView(View):
+class ModelView(View):
     """
     Baseview for detail views.
 
@@ -201,7 +192,7 @@ class DocumentView(View):
 
         try:
             obj = self.document.objects.get(pk=pk)
-            _update_mongoengine_document(obj, self.CONTENT)
+            obj.__dict__.update(self.CONTENT)
             obj.save()
             return Response(status.HTTP_200_OK)
         except self.document.DoesNotExist:
@@ -210,7 +201,7 @@ class DocumentView(View):
             return Response(status.HTTP_201_CREATED)
 
     def delete(self, request, pk):
-        """Delete a document."""
+        """Delete an object."""
         if request.user.is_anonymous():
             return Response(status.HTTP_403_FORBIDDEN)
 
@@ -221,7 +212,7 @@ class DocumentView(View):
             return Response(status.HTTP_404_NOT_FOUND)
 
 
-class AnnotationView(DocumentView):
+class AnnotationView(ModelView):
     """
     Edit annotation details.
 
@@ -234,7 +225,7 @@ class AnnotationView(DocumentView):
     form = AnnotationForm
 
 
-class AnnotationTypeView(DocumentView):
+class AnnotationTypeView(ModelView):
     """
     Edit annotation type details.
     """
@@ -242,7 +233,7 @@ class AnnotationTypeView(DocumentView):
     form = TypeForm
 
 
-class AnnotationCategoryView(DocumentView):
+class AnnotationCategoryView(ModelView):
     """
     Edit annotation category details.
     """
@@ -250,7 +241,7 @@ class AnnotationCategoryView(DocumentView):
     form = CategoryForm
 
 
-class AnnotationStatusView(DocumentView):
+class AnnotationStatusView(ModelView):
     """
     Edit annotation status details.
     """
