@@ -15,6 +15,8 @@ from django.views.generic import (
     DetailView,
 )
 
+from lizard_history.utils import get_history
+
 from lizard_annotation.forms import AnnotationForm
 from lizard_annotation.models import (
     Annotation,
@@ -22,7 +24,6 @@ from lizard_annotation.models import (
     AnnotationStatus,
     AnnotationCategory,
 )
-
 
 
 class AnnotationDetailView(AppView):
@@ -108,6 +109,55 @@ def annotation_detailedit_portal(request):
         template.render(context),
         mimetype="text/plain",
     )
+
+
+class AnnotationHistoryView(AppView):
+    """
+    Show annotation history
+    """
+    template_name='lizard_annotation/annotation_history.html'
+
+    def annotation(self):
+        """Return an annotation"""
+        if not hasattr(self, '_annotation'):
+            self._annotation = Annotation.objects.get(
+                pk=self.annotation_id)
+        return self._annotation
+
+    def history(self):
+        """
+        Return full history, if possible cached
+        """
+        if not hasattr(self, '_log_entry'):
+            self._history = get_history(
+                obj=self.annotation(),
+            )
+
+        return self._history
+    
+    def get(self, request, *args, **kwargs):
+        self.annotation_id = kwargs['annotation_id']
+        print self.history()
+        return super(AnnotationHistoryView, self).get(
+            request, *args, **kwargs)
+
+
+class AnnotationArchiveView(AppView):
+    """
+    Readonly annotation form.
+    """
+
+    def get(self, request, *args, **kwargs):
+        """
+        Return read only form for annotation corresponding to specific log_entry.
+        """
+        if request.user.is_authenticated():
+            self.template_name = 'lizard_annotation/annotation_form_read_only.js'
+            self.annotation_id = kwargs.get('annotation_id')
+            self.log_entry_id = kwargs.get('log_entry_id')
+        else:
+            self.template_name = 'portals/geen_toegang.js'
+        return super(AnnotationArchiveView, self).get(request, *args, **kwargs)
 
 
 class AnnotationView(ViewContextMixin, TemplateView):

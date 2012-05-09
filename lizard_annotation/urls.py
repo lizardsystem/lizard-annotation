@@ -7,7 +7,12 @@ from django.conf.urls.defaults import (
 
 from django.contrib import admin
 
-from lizard_annotation.views import AnnotationDetailView
+from lizard_annotation.views import (
+    AnnotationDetailView,
+    AnnotationHistoryView,
+    AnnotationArchiveView,
+)
+
 from lizard_ui.urls import debugmode_urlpatterns
 
 admin.autodiscover()
@@ -32,5 +37,13 @@ urlpatterns = patterns(
     'lizard_annotation.views.annotation_detailedit_portal',
      {},
      "lizard_annotation.annotation_detailedit_portal"),
+    (r'^history/(?P<annotation_id>\d+)/$',
+     AnnotationHistoryView.as_view(),
+     {},
+     "lizard_annotation.history"),
+    (r'^archive/(?P<annotation_id>\d+)/(?P<log_entry_id>\d+)/$',
+     AnnotationArchiveView.as_view(),
+     {},
+     "lizard_annotation.archive"),
 )
 urlpatterns += debugmode_urlpatterns()

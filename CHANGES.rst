@@ -6,6 +6,7 @@ Changelog of lizard-annotation
 ------------------
 
 - Fix bug with due to old mongocode in api.
+- Add history view and form.
 
 
 0.5.7 (2012-04-27)

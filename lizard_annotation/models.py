@@ -136,13 +136,17 @@ class AnnotationStatus(models.Model, GettersMixin):
 
 
 class Annotation(models.Model, GettersMixin):
+    """
+    Annotation.
+    """
 
     class Meta:
         verbose_name = _('Annotation')
         verbose_name_plural = _('Annotations')
-    """
-    Annotation.
-    """
+    
+    # View whose data to store via lizard_history.
+    HISTORY_DATA_VIEW = ('lizard_annotation.api.views.AnnotationFormView')
+
     title = models.CharField(
         max_length=256,
         null=True,
