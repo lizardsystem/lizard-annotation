@@ -2,7 +2,7 @@ Changelog of lizard-annotation
 ===================================================
 
 
-0.5.8 (unreleased)
+0.5.8 (2012-05-10)
 ------------------
 
 - Fix bug with due to old mongocode in api.
