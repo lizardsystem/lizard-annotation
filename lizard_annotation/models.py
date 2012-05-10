@@ -13,6 +13,8 @@ from lizard_workspace.models import (
     LayerCollage,
 )
 
+from lizard_history.utils import get_simple_history
+
 import copy
 
 from django.contrib.contenttypes.models import ContentType
@@ -26,7 +28,7 @@ class GettersMixin(object):
     """
     Provides a get_dict() method and a get_property_list() method
     """
-    def get_dict(self, url=False, ref_urls=False):
+    def get_dict(self, url=False, ref_urls=False, history=False):
         """
         Return the fields and their contents as a dict.
 
@@ -44,6 +46,17 @@ class GettersMixin(object):
                     result.update({k + '_url': v.get_absolute_url()})
             else:
                 result.update({k: v})
+
+        if history:
+            result.update(get_simple_history(self))
+            # Since only modified is displayed, so do
+            if result['datetime_modified'] is None:
+                result['datetime_modified'] = result['datetime_created']
+            if result['modified_by'] is None:
+                result['modified_by'] = result['created_by']
+
+
+            
         return result
 
     def get_property_list(self, properties=None):

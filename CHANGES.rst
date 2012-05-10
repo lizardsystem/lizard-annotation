@@ -5,7 +5,7 @@ Changelog of lizard-annotation
 0.5.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add history items to grid view.
 
 
 0.5.8 (2012-05-10)

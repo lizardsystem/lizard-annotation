@@ -97,7 +97,7 @@ class AnnotationGridView(View):
             annotations = area.annotation_set.all()
                 
 
-        return {'annotations': [a.get_dict()
+        return {'annotations': [a.get_dict(history=True)
                                 for a in annotations]}
 
 

@@ -20,6 +20,7 @@ install_requires = [
     'lizard_measure',
     'lizard_security',
     'lizard_workspace',
+    'lizard_history',
     'pkginfo',
     'djangorestframework',
     ],
