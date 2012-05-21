@@ -137,7 +137,6 @@ class AnnotationHistoryView(AppView):
     
     def get(self, request, *args, **kwargs):
         self.annotation_id = kwargs['annotation_id']
-        print self.history()
         return super(AnnotationHistoryView, self).get(
             request, *args, **kwargs)
 

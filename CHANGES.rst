@@ -5,7 +5,7 @@ Changelog of lizard-annotation
 0.5.10 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Remove print statement.
 
 
 0.5.9 (2012-05-10)
