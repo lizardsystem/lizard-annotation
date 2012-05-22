@@ -158,7 +158,7 @@ class Annotation(models.Model, GettersMixin):
         verbose_name_plural = _('Annotations')
     
     # View whose data to store via lizard_history.
-    HISTORY_DATA_VIEW = ('lizard_annotation.api.views.AnnotationFormView')
+    HISTORY_DATA_VIEW = 'lizard_annotation.api.views.AnnotationFormView'
 
     title = models.CharField(
         max_length=256,
