@@ -6,6 +6,7 @@ Changelog of lizard-annotation
 -------------------
 
 - Remove print statement.
+- fix history page for i.e.
 
 
 0.5.9 (2012-05-10)
